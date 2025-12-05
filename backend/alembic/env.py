@@ -11,6 +11,7 @@ from sqlmodel import SQLModel
 # access to the values within the .ini file in use.
 config = context.config
 settings = get_settings()
+#para reutilizar get_settings() (así el URI sale del mismo .env) y exponer SQLModel.metadata como target_metadata para futuras autogeneraciones.
 config.set_main_option("sqlalchemy.url", settings.sqlmodel_database_uri)
 
 # Interpret the config file for Python logging.
