@@ -11,9 +11,13 @@ from sqlmodel import SQLModel
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+# ESTA PARTE NO VIENE POR DEFECTO EN env.py DE ALEMBIC, 
+# LA AGREGO PARA USAR EL .env
 settings = get_settings()
 #para reutilizar get_settings() (así el URI sale del mismo .env) y exponer SQLModel.metadata como target_metadata para futuras autogeneraciones.
 config.set_main_option("sqlalchemy.url", settings.sqlmodel_database_uri)
+# HASTA ACÁ LLEGA LA PARTE AGREGADA
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
