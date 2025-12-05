@@ -6,7 +6,6 @@ from enum import Enum
 from sqlalchemy import Column, Enum as SqlEnum
 from sqlmodel import Field, Relationship, SQLModel
 
-
 class DiaSemana(str, Enum):
     LUNES = "lunes"
     MARTES = "martes"
@@ -18,7 +17,10 @@ class DiaSemana(str, Enum):
 
 
 class Rutina(SQLModel, table=True):
-    __tablename__ = "rutinas"
+    
+    __tablename__ = "rutinas"  # type: ignore[assignment]
+    
+    # Definición de las columnas de la tabla rutinas
 
     id: int | None = Field(default=None, primary_key=True)
     nombre: str = Field(max_length=120, unique=True, index=True)
@@ -32,7 +34,11 @@ class Rutina(SQLModel, table=True):
 
 
 class Ejercicio(SQLModel, table=True):
-    __tablename__ = "ejercicios"
+    
+    __tablename__ = "ejercicios"  # type: ignore[assignment]
+    
+    # Definición de las columnas de la tabla ejercicios
+    # Incluye una clave foránea que referencia a la tabla rutinas
 
     id: int | None = Field(default=None, primary_key=True)
     rutina_id: int = Field(foreign_key="rutinas.id", ondelete="CASCADE")

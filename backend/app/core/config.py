@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     db_port: int = Field(default=5432)
     db_name: str = Field(default="gym_Tormund")
     db_user: str = Field(default="postgres")
-    db_password: str = Field(default="1peso1dolar")
+    db_password: str = Field(default="123456")
 
     database_url: Annotated[AnyUrl | None, Field(alias="DATABASE_URL")] = None
 
