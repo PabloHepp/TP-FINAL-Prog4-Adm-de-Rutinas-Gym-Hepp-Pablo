@@ -62,7 +62,7 @@ def list_rutinas(
     if dia_semana:
         statement = statement.join(_rutina_ejercicios_attr()).where(Ejercicio.dia_semana == dia_semana).distinct()
 
-    return session.exec(statement).all()
+    return session.exec(statement).all() # Devuelve la lista de rutinas que cumplen los criterios
 
 
 @router.get("/{rutina_id}", response_model=RutinaRead)
