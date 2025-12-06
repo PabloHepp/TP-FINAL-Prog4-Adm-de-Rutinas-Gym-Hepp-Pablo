@@ -1,8 +1,13 @@
-from typing import List, Sequence
+# este archivo define las rutas de la API para gestionar las rutinas de ejercicios
+# incluye operaciones para listar, obtener, crear, actualizar y eliminar rutinas
+# utiliza FastAPI junto con SQLModel para interactuar con la base de datos
+
+from typing import Any, List, Sequence, Union, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import selectinload
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlmodel import Session, select
 
 from app.db.session import get_session
@@ -14,10 +19,28 @@ from app.schemas.rutina import (
     RutinaUpdate,
 )
 
-router = APIRouter(prefix="/rutinas", tags=["rutinas"])
+def _rutina_ejercicios_attr() -> InstrumentedAttribute[Any]:
+    return cast(InstrumentedAttribute[Any], Rutina.ejercicios)
 
 
-@router.get("/", response_model=List[RutinaRead])
+def _rutina_nombre_attr() -> InstrumentedAttribute[Any]:
+    return cast(InstrumentedAttribute[Any], Rutina.nombre)
+
+
+def _rutina_fecha_attr() -> InstrumentedAttribute[Any]:
+    return cast(InstrumentedAttribute[Any], Rutina.fecha_creacion)
+
+router = APIRouter(prefix="/rutinas", tags=["rutinas"]) 
+# Router para las operaciones de rutinas
+# Todas las rutas estarán bajo el prefijo /rutinas
+# Las rutas estarán etiquetadas con "rutinas" para documentación
+
+## Todos los handlers dependen de get_session, el generador de sesiones SQLModel definido en app.db.session, así que FastAPI abre una sesión por request y la cierra al final.
+## Para convertir objetos de base de datos a JSON, cada endpoint usa los esquemas de app.schemas.rutina (RutinaRead, RutinaCreate, etc.), lo que asegura que la respuesta tenga siempre la forma esperada y valida la entrada de forma automática.
+
+## ENDPOINTS
+
+@router.get("/", response_model=List[RutinaRead]) # Lista todas las rutinas con filtros opcionales
 def list_rutinas(
     search: str | None = Query(default=None, description="Filtra por nombre de rutina"),
     dia_semana: DiaSemana | None = Query(
@@ -27,17 +50,17 @@ def list_rutinas(
     session: Session = Depends(get_session),
 ) -> Sequence[Rutina]:
     statement = (
-        select(Rutina)
-        .options(selectinload(Rutina.ejercicios))
-        .order_by(Rutina.fecha_creacion.desc())
+        select(Rutina) # Selecciona todas las rutinas
+        .options(selectinload(_rutina_ejercicios_attr())) # Carga los ejercicios relacionados
+        .order_by(_rutina_fecha_attr().desc())
     )
 
     if search:
         criterio = f"%{search.strip()}%"
-        statement = statement.where(Rutina.nombre.ilike(criterio))
+        statement = statement.where(_rutina_nombre_attr().ilike(criterio))
 
     if dia_semana:
-        statement = statement.join(Rutina.ejercicios).where(Ejercicio.dia_semana == dia_semana).distinct()
+        statement = statement.join(_rutina_ejercicios_attr()).where(Ejercicio.dia_semana == dia_semana).distinct()
 
     return session.exec(statement).all()
 
@@ -46,7 +69,7 @@ def list_rutinas(
 def get_rutina(rutina_id: int, session: Session = Depends(get_session)) -> Rutina:
     statement = (
         select(Rutina)
-        .options(selectinload(Rutina.ejercicios))
+        .options(selectinload(_rutina_ejercicios_attr()))
         .where(Rutina.id == rutina_id)
     )
     rutina = session.exec(statement).first()
@@ -118,5 +141,13 @@ def delete_rutina(rutina_id: int, session: Session = Depends(get_session)) -> No
     session.commit()
 
 
-def _build_ejercicios(items: List[EjercicioCreate]) -> list[Ejercicio]:
-    return [Ejercicio(**ejercicio.model_dump()) for ejercicio in items]
+def _build_ejercicios(items: Sequence[Union[EjercicioCreate, dict[str, Any]]]) -> list[Ejercicio]:
+    ejercicios: list[Ejercicio] = []
+    for ejercicio in items:
+        payload = (
+            ejercicio.model_dump()
+            if isinstance(ejercicio, EjercicioCreate)
+            else cast(dict[str, Any], ejercicio)
+        )
+        ejercicios.append(Ejercicio(**payload))
+    return ejercicios

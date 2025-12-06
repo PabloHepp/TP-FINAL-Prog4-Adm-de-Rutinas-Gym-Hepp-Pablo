@@ -1,7 +1,6 @@
-from __future__ import annotations
-
 from datetime import datetime
 from enum import Enum
+from typing import List
 
 from sqlalchemy import Column, Enum as SqlEnum
 from sqlmodel import Field, Relationship, SQLModel
@@ -27,7 +26,7 @@ class Rutina(SQLModel, table=True):
     descripcion: str | None = Field(default=None, max_length=500)
     fecha_creacion: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
-    ejercicios: list[Ejercicio] = Relationship(
+    ejercicios: List["Ejercicio"] = Relationship(
         back_populates="rutina",
         sa_relationship_kwargs={"cascade": "all, delete-orphan", "lazy": "joined"},
     )
@@ -52,4 +51,4 @@ class Ejercicio(SQLModel, table=True):
     notas: str | None = Field(default=None, max_length=500)
     orden: int = Field(default=1, ge=1)
 
-    rutina: Rutina = Relationship(back_populates="ejercicios")
+    rutina: "Rutina" = Relationship(back_populates="ejercicios")
