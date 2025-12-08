@@ -1,3 +1,7 @@
+// este archivo es el archivo de configuración de TypeScript para el frontend del proyecto.
+// Define las opciones del compilador, las rutas de los módulos y los archivos incluidos en la compilación.
+// Asegura que el código TypeScript se compile correctamente y se integre con React.
+
 {
   "compilerOptions": {
     "target": "ES2020",
@@ -11,6 +15,9 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Node",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
