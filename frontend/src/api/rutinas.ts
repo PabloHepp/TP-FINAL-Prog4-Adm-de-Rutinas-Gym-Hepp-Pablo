@@ -17,7 +17,7 @@ import {
   RutinaUpdatePayload,
 } from "@/types/rutina";
 
-const RUTINAS_KEY = ["rutinas"]; // Clave base para las consultas de rutinas
+const RUTINAS_KEY = "rutinas"; // Clave base para las consultas de rutinas
 
 export function useRutinas(search?: string, dia_semana?: string) {
   return useQuery({
@@ -51,7 +51,7 @@ export function useCreateRutina() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: RUTINAS_KEY });
+      queryClient.invalidateQueries({ queryKey: [RUTINAS_KEY] });
     },
   });
 }
@@ -64,7 +64,7 @@ export function useUpdateRutina(id: number) {
       return data;
     },
     onSuccess: (_, __, context) => {
-      queryClient.invalidateQueries({ queryKey: RUTINAS_KEY });
+      queryClient.invalidateQueries({ queryKey: [RUTINAS_KEY] });
       queryClient.invalidateQueries({ queryKey: ["rutina", id] });
       return context;
     },
@@ -78,7 +78,7 @@ export function useDeleteRutina() {
       await apiClient.delete(`/rutinas/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: RUTINAS_KEY });
+      queryClient.invalidateQueries({ queryKey: [RUTINAS_KEY] });
     },
   });
 }

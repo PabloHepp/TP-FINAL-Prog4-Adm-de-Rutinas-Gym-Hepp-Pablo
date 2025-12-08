@@ -1,5 +1,6 @@
-import { AppBar, Box, Container, CssBaseline, ThemeProvider, Toolbar, Typography } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { AppBar, Box, Container, CssBaseline, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import { Link, Outlet } from "react-router-dom";
 
 import theme from "@/theme";
 
@@ -9,9 +10,18 @@ function App() {
       <CssBaseline />
       <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <AppBar position="static" color="primary" elevation={0}>
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Administrador de Rutinas
+          <Toolbar sx={{ position: "relative", justifyContent: "center" }}>
+            <IconButton
+              color="inherit"
+              component={Link}
+              to="/"
+              aria-label="Ir al inicio"
+              sx={{ position: "absolute", left: (theme) => theme.spacing(1) }}
+            >
+              <HomeIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" textAlign="center">
+              Administrador de Rutinas Gym Tormund
             </Typography>
           </Toolbar>
         </AppBar>

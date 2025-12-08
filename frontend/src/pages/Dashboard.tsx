@@ -4,9 +4,9 @@
 // Maneja estados de carga, error y muestra los datos en una tabla.
 // Proporciona una interfaz de usuario amigable con Material-UI.
 
-import { Alert, Button, CircularProgress, Stack, Typography } from "@mui/material";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Alert, Button, CircularProgress, Snackbar, Stack, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useDeleteRutina, useRutinas } from "@/api/rutinas";
 import RutinaFilters, { RutinaFiltersValue } from "@/components/RutinaFilters";
@@ -22,21 +22,45 @@ const INITIAL_FILTERS: RutinaFiltersValue = {
 function Dashboard() {
   const [filters, setFilters] = useState<RutinaFiltersValue>(INITIAL_FILTERS);
   const [rutinaToDelete, setRutinaToDelete] = useState<Rutina | null>(null);
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const navigate = useNavigate();
+  const location = useLocation();
   const { data, isLoading, isError, error, refetch } = useRutinas(
     filters.search || undefined,
     filters.dia_semana || undefined
   );
   const { mutateAsync: deleteRutina, isPending: isDeleting } = useDeleteRutina();
 
+  useEffect(() => {
+    const feedback = (location.state as { feedback?: string } | null)?.feedback;
+    if (feedback) {
+      setSnackbar({ open: true, message: feedback, severity: "success" });
+      navigate(".", { replace: true });
+    }
+  }, [location.state, navigate]);
+
   const handleDelete = async () => {
     if (!rutinaToDelete) return;
     try {
       await deleteRutina(rutinaToDelete.id);
       setRutinaToDelete(null);
-    } catch {
-      /* react-query maneja el error */
+      setSnackbar({ open: true, message: "Rutina eliminada correctamente.", severity: "success" });
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        message: err instanceof Error ? err.message : "No se pudo eliminar la rutina.",
+        severity: "error",
+      });
     }
+  };
+
+  const handleSnackbarClose = (_?: unknown, reason?: string) => {
+    if (reason === "clickaway") return;
+    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
   return (
@@ -87,6 +111,17 @@ function Dashboard() {
           if (!isDeleting) setRutinaToDelete(null);
         }}
       />
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert variant="filled" severity={snackbar.severity} onClose={handleSnackbarClose} sx={{ width: "100%" }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Stack>
   );
 }

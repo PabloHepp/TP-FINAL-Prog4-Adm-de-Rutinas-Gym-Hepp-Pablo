@@ -28,7 +28,10 @@ function RutinaDetailPage() {
     if (!data) return;
     try {
       await deleteRutina(data.id);
-      navigate("/");
+      setShowConfirm(false);
+      navigate("/", {
+        state: { feedback: "Rutina eliminada correctamente." },
+      });
     } catch {
       /* react-query manejará los errores */
     }
