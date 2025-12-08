@@ -8,9 +8,11 @@ import { Alert, Button, CircularProgress, Stack, Typography } from "@mui/materia
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useRutinas } from "@/api/rutinas";
+import { useDeleteRutina, useRutinas } from "@/api/rutinas";
 import RutinaFilters, { RutinaFiltersValue } from "@/components/RutinaFilters";
 import RutinaTable from "@/components/RutinaTable";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
+import { Rutina } from "@/types/rutina";
 
 const INITIAL_FILTERS: RutinaFiltersValue = {
   search: "",
@@ -19,11 +21,23 @@ const INITIAL_FILTERS: RutinaFiltersValue = {
 
 function Dashboard() {
   const [filters, setFilters] = useState<RutinaFiltersValue>(INITIAL_FILTERS);
+  const [rutinaToDelete, setRutinaToDelete] = useState<Rutina | null>(null);
   const navigate = useNavigate();
   const { data, isLoading, isError, error, refetch } = useRutinas(
     filters.search || undefined,
     filters.dia_semana || undefined
   );
+  const { mutateAsync: deleteRutina, isPending: isDeleting } = useDeleteRutina();
+
+  const handleDelete = async () => {
+    if (!rutinaToDelete) return;
+    try {
+      await deleteRutina(rutinaToDelete.id);
+      setRutinaToDelete(null);
+    } catch {
+      /* react-query maneja el error */
+    }
+  };
 
   return (
     <Stack spacing={3}>
@@ -54,8 +68,25 @@ function Dashboard() {
       )}
 
       {!isLoading && !isError && data && (
-        <RutinaTable rutinas={data} onSelect={(rutina) => navigate(`/rutinas/${rutina.id}`)} />
+        <RutinaTable
+          rutinas={data}
+          onSelect={(rutina) => navigate(`/rutinas/${rutina.id}`)}
+          onEdit={(rutina) => navigate(`/rutinas/${rutina.id}/editar`)}
+          onDelete={(rutina) => setRutinaToDelete(rutina)}
+        />
       )}
+
+      <ConfirmDialog
+        open={Boolean(rutinaToDelete)}
+        title="Eliminar rutina"
+        description={`¿Seguro que querés eliminar "${rutinaToDelete?.nombre ?? ""}"? Esta acción no se puede deshacer.`}
+        confirmLabel={isDeleting ? "Eliminando..." : "Eliminar"}
+        destructive
+        onConfirm={handleDelete}
+        onClose={() => {
+          if (!isDeleting) setRutinaToDelete(null);
+        }}
+      />
     </Stack>
   );
 }

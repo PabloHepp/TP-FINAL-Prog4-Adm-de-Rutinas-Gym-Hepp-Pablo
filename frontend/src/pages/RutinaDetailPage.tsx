@@ -5,19 +5,34 @@
 // Proporciona botones para editar y eliminar la rutina.
 // Maneja estados de carga y error durante la obtención de datos.
 
-import { useRutina } from "@/api/rutinas";
+import { useState } from "react";
+
+import { useDeleteRutina, useRutina } from "@/api/rutinas";
 import { Chip, CircularProgress, Divider, IconButton, Stack, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { useNavigate, useParams } from "react-router-dom";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 
 function RutinaDetailPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const rutinaId = Number(id);
   const { data, isLoading, isError, error, refetch } = useRutina(Number.isNaN(rutinaId) ? null : rutinaId);
+  const { mutateAsync: deleteRutina, isPending: isDeleting } = useDeleteRutina();
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const handleDelete = async () => {
+    if (!data) return;
+    try {
+      await deleteRutina(data.id);
+      navigate("/");
+    } catch {
+      /* react-query manejará los errores */
+    }
+  };
 
   if (isLoading) {
     return (
@@ -59,7 +74,7 @@ function RutinaDetailPage() {
         <IconButton color="primary" onClick={() => navigate(`/rutinas/${data.id}/editar`)}>
           <EditIcon />
         </IconButton>
-        <IconButton color="error">
+        <IconButton color="error" onClick={() => setShowConfirm(true)} disabled={isDeleting}>
           <DeleteIcon />
         </IconButton>
       </Stack>
@@ -82,6 +97,18 @@ function RutinaDetailPage() {
           </Stack>
         ))}
       </Stack>
+
+      <ConfirmDialog
+        open={showConfirm}
+        title="Eliminar rutina"
+        description="Esta acción eliminará la rutina y todos sus ejercicios. ¿Deseás continuar?"
+        confirmLabel={isDeleting ? "Eliminando..." : "Eliminar"}
+        destructive
+        onConfirm={handleDelete}
+        onClose={() => {
+          if (!isDeleting) setShowConfirm(false);
+        }}
+      />
     </Stack>
   );
 }
