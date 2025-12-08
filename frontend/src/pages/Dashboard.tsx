@@ -34,7 +34,7 @@ function Dashboard() {
           </Typography>
           <Typography color="text.secondary">Gestioná tus planes de entrenamiento.</Typography>
         </div>
-        <Button variant="contained" color="secondary" disabled>
+        <Button variant="contained" color="secondary" onClick={() => navigate("/rutinas/nueva")}>
           Nueva rutina
         </Button>
       </Stack>

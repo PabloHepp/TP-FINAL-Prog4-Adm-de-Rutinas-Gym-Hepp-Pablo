@@ -8,7 +8,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App";
 import Dashboard from "@/pages/Dashboard";
+import RutinaCreatePage from "@/pages/RutinaCreatePage";
 import RutinaDetailPage from "@/pages/RutinaDetailPage";
+import RutinaEditPage from "@/pages/RutinaEditPage";
 
 const router = createBrowserRouter([
   {
@@ -20,8 +22,16 @@ const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
+        path: "rutinas/nueva",
+        element: <RutinaCreatePage />,
+      },
+      {
         path: "rutinas/:id",
         element: <RutinaDetailPage />,
+      },
+      {
+        path: "rutinas/:id/editar",
+        element: <RutinaEditPage />,
       },
     ],
   },

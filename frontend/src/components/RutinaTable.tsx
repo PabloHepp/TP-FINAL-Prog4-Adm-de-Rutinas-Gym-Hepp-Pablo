@@ -11,11 +11,11 @@ import {
   CardContent,
   CardHeader,
   Chip,
-  Grid2 as Grid,
   IconButton,
   Stack,
   Typography,
 } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -40,7 +40,7 @@ function RutinaTable({ rutinas, onEdit, onDelete, onSelect }: RutinaTableProps) 
   return (
     <Grid container spacing={3}>
       {rutinas.map((rutina) => (
-        <Grid key={rutina.id} xs={12} sm={6} lg={4}>
+        <Grid item key={rutina.id} xs={12} sm={6} lg={4}>
           <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
             <CardHeader
               title={rutina.nombre}

@@ -56,7 +56,7 @@ function RutinaDetailPage() {
         </Typography>
       </Stack>
       <Stack direction="row" spacing={1}>
-        <IconButton color="primary">
+        <IconButton color="primary" onClick={() => navigate(`/rutinas/${data.id}/editar`)}>
           <EditIcon />
         </IconButton>
         <IconButton color="error">
