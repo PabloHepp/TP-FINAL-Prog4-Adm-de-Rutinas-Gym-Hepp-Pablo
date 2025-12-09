@@ -2,9 +2,10 @@
 # incluye operaciones para listar, obtener, crear, actualizar y eliminar rutinas
 # utiliza FastAPI junto con SQLModel para interactuar con la base de datos
 
-from typing import Any, List, Sequence, Union, cast
+from typing import Any, Sequence, Union, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.attributes import InstrumentedAttribute
@@ -16,6 +17,7 @@ from app.schemas.rutina import (
     EjercicioCreate,
     RutinaCreate,
     RutinaDuplicatePayload,
+    RutinaPaginatedResponse,
     RutinaRead,
     RutinaUpdate,
 )
@@ -41,20 +43,27 @@ router = APIRouter(prefix="/rutinas", tags=["rutinas"])
 
 ## ENDPOINTS
 
-@router.get("/", response_model=List[RutinaRead]) # Lista todas las rutinas con filtros opcionales
+DEFAULT_PAGE_SIZE = 9
+MAX_PAGE_SIZE = 50
+
+
+@router.get("/", response_model=RutinaPaginatedResponse) # Lista todas las rutinas con filtros opcionales
 def list_rutinas(
     search: str | None = Query(default=None, description="Filtra por nombre de rutina"),
     dia_semana: DiaSemana | None = Query(
         default=None,
         description="Devuelve solo rutinas que contengan ejercicios en ese día",
     ),
+    page: int = Query(default=1, ge=1, description="Número de página (1-indexed)"),
+    page_size: int = Query(
+        default=DEFAULT_PAGE_SIZE,
+        ge=1,
+        le=MAX_PAGE_SIZE,
+        description="Cantidad de rutinas por página",
+    ),
     session: Session = Depends(get_session),
-) -> Sequence[Rutina]:
-    statement = (
-        select(Rutina) # Selecciona todas las rutinas
-        .options(selectinload(_rutina_ejercicios_attr())) # Carga los ejercicios relacionados
-        .order_by(_rutina_fecha_attr().desc())
-    )
+) -> RutinaPaginatedResponse:
+    statement = select(Rutina)
 
     if search:
         criterio = f"%{search.strip()}%"
@@ -63,7 +72,29 @@ def list_rutinas(
     if dia_semana:
         statement = statement.join(_rutina_ejercicios_attr()).where(Ejercicio.dia_semana == dia_semana).distinct()
 
-    return session.exec(statement).all() # Devuelve la lista de rutinas que cumplen los criterios
+    offset = (page - 1) * page_size
+
+    count_subquery = statement.order_by(None).subquery()
+    total = session.exec(select(func.count()).select_from(count_subquery)).one()
+
+    paginated_statement = (
+        statement
+        .options(selectinload(_rutina_ejercicios_attr()))
+        .order_by(_rutina_fecha_attr().desc())
+        .offset(offset)
+        .limit(page_size)
+    )
+
+    rutinas = session.exec(paginated_statement).all()
+    total_pages = (total + page_size - 1) // page_size if total else 0
+
+    return RutinaPaginatedResponse(
+        items=rutinas,
+        total=total,
+        page=page,
+        page_size=page_size,
+        total_pages=total_pages,
+    ) # Devuelve la lista paginada y metadatos
 
 
 @router.get("/{rutina_id}", response_model=RutinaRead)

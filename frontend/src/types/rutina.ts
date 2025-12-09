@@ -51,3 +51,11 @@ export interface RutinaUpdatePayload {
 export interface RutinaDuplicatePayload {
   nuevo_nombre: string;
 }
+
+export interface RutinaPaginatedResponse {
+  items: Rutina[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+}

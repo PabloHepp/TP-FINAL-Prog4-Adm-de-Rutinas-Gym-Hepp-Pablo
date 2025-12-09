@@ -19,8 +19,11 @@ const INITIAL_FILTERS: RutinaFiltersValue = {
   dia_semana: "",
 };
 
+const PAGE_SIZE = 9;
+
 function Dashboard() {
   const [filters, setFilters] = useState<RutinaFiltersValue>(INITIAL_FILTERS);
+  const [page, setPage] = useState(1);
   const [rutinaToDelete, setRutinaToDelete] = useState<Rutina | null>(null);
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({
     open: false,
@@ -32,10 +35,12 @@ function Dashboard() {
   const [duplicateError, setDuplicateError] = useState<string | undefined>();
   const navigate = useNavigate();
   const location = useLocation();
-  const { data, isLoading, isError, error, refetch } = useRutinas(
-    filters.search || undefined,
-    filters.dia_semana || undefined
-  );
+  const { data, isLoading, isError, error, refetch } = useRutinas({
+    search: filters.search || undefined,
+    dia_semana: filters.dia_semana || undefined,
+    page,
+    page_size: PAGE_SIZE,
+  });
   const { mutateAsync: deleteRutina, isPending: isDeleting } = useDeleteRutina();
   const { mutateAsync: duplicateRutina, isPending: isDuplicating } = useDuplicateRutina();
 
@@ -46,6 +51,17 @@ function Dashboard() {
       navigate(".", { replace: true });
     }
   }, [location.state, navigate]);
+
+  useEffect(() => {
+    if (!data) return;
+    if (data.total_pages === 0 && page !== 1) {
+      setPage(1);
+      return;
+    }
+    if (data.total_pages > 0 && page > data.total_pages) {
+      setPage(data.total_pages);
+    }
+  }, [data, page]);
 
   const handleDelete = async () => {
     if (!rutinaToDelete) return;
@@ -91,6 +107,28 @@ function Dashboard() {
     setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
+  const handleFiltersChange = (nextFilters: RutinaFiltersValue) => {
+    setFilters(nextFilters);
+    setPage(1);
+  };
+
+  const rutinas = data?.items ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = data?.total_pages ?? 0;
+  const hasResults = rutinas.length > 0;
+  const showingStart = hasResults ? (page - 1) * PAGE_SIZE + 1 : 0;
+  const showingEnd = hasResults ? showingStart + rutinas.length - 1 : 0;
+  const canGoPrev = page > 1;
+  const canGoNext = totalPages > 0 ? page < totalPages : false;
+
+  const handlePrevPage = () => {
+    if (canGoPrev) setPage((prev) => Math.max(1, prev - 1));
+  };
+
+  const handleNextPage = () => {
+    if (canGoNext) setPage((prev) => prev + 1);
+  };
+
   return (
     <Stack spacing={3}>
       <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" alignItems="center" spacing={2}>
@@ -105,7 +143,7 @@ function Dashboard() {
         </Button>
       </Stack>
 
-      <RutinaFilters value={filters} onChange={setFilters} />
+      <RutinaFilters value={filters} onChange={handleFiltersChange} />
 
       {isLoading && (
         <Stack alignItems="center" py={4}>
@@ -120,13 +158,45 @@ function Dashboard() {
       )}
 
       {!isLoading && !isError && data && (
-        <RutinaTable
-          rutinas={data}
-          onSelect={(rutina) => navigate(`/rutinas/${rutina.id}`)}
-          onEdit={(rutina) => navigate(`/rutinas/${rutina.id}/editar`)}
-          onDelete={(rutina) => setRutinaToDelete(rutina)}
-          onDuplicate={handleStartDuplicate}
-        />
+        <Stack spacing={2}>
+          <RutinaTable
+            rutinas={rutinas}
+            onSelect={(rutina) => navigate(`/rutinas/${rutina.id}`)}
+            onEdit={(rutina) => navigate(`/rutinas/${rutina.id}/editar`)}
+            onDelete={(rutina) => setRutinaToDelete(rutina)}
+            onDuplicate={handleStartDuplicate}
+          />
+
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            alignItems={{ xs: "stretch", sm: "center" }}
+            justifyContent="space-between"
+            spacing={1}
+          >
+            <Typography variant="body2" color="text.secondary">
+              {hasResults
+                ? `Mostrando ${showingStart}-${showingEnd} de ${total} rutinas`
+                : total === 0
+                  ? "No se encontraron rutinas para los filtros seleccionados."
+                  : `Mostrando 0 de ${total} rutinas`}
+            </Typography>
+            <Stack direction="row" spacing={1} justifyContent={{ xs: "flex-start", sm: "flex-end" }}>
+              <Button variant="outlined" onClick={handlePrevPage} disabled={!canGoPrev}>
+                Anterior
+              </Button>
+              <Button variant="outlined" onClick={handleNextPage} disabled={!canGoNext}>
+                Siguiente
+              </Button>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ minWidth: 120, textAlign: "center", alignSelf: "center" }}
+              >
+                Página {Math.min(page, Math.max(totalPages, 1))} de {Math.max(totalPages, 1)}
+              </Typography>
+            </Stack>
+          </Stack>
+        </Stack>
       )}
 
       <ConfirmDialog

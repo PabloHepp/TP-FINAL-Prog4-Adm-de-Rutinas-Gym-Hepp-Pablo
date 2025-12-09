@@ -82,3 +82,11 @@ class RutinaSearchResponse(BaseModel):
 
 class RutinaDuplicatePayload(BaseModel):
     nuevo_nombre: str = Field(..., max_length=120)
+
+
+class RutinaPaginatedResponse(BaseModel):
+    items: List[RutinaRead]
+    total: int
+    page: int = Field(ge=1)
+    page_size: int = Field(ge=1)
+    total_pages: int = Field(ge=0)

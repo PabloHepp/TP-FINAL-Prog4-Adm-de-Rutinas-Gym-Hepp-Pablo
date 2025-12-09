@@ -8,24 +8,35 @@
 // Estos hooks facilitan la integración de la lógica de datos con la interfaz de usuario.
 // Permite la invalidación automática de caché tras mutaciones para mantener los datos actualizados.
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { UseQueryResult, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import apiClient from "@/api/client";
 import {
   Rutina,
   RutinaCreatePayload,
   RutinaDuplicatePayload,
+  RutinaPaginatedResponse,
   RutinaUpdatePayload,
 } from "@/types/rutina";
 
 const RUTINAS_KEY = "rutinas"; // Clave base para las consultas de rutinas
 
-export function useRutinas(search?: string, dia_semana?: string) {
-  return useQuery({
-    queryKey: [RUTINAS_KEY, { search, dia_semana }],
+interface RutinasQueryParams {
+  search?: string;
+  dia_semana?: string;
+  page?: number;
+  page_size?: number;
+}
+
+export function useRutinas({ search, dia_semana, page = 1, page_size }: RutinasQueryParams): UseQueryResult<
+  RutinaPaginatedResponse,
+  Error
+> {
+  return useQuery<RutinaPaginatedResponse, Error>({
+    queryKey: [RUTINAS_KEY, { search, dia_semana, page, page_size }],
     queryFn: async () => {
-      const { data } = await apiClient.get<Rutina[]>("/rutinas/", {
-        params: { search, dia_semana },
+      const { data } = await apiClient.get<RutinaPaginatedResponse>("/rutinas/", {
+        params: { search, dia_semana, page, page_size },
       });
       return data;
     },
