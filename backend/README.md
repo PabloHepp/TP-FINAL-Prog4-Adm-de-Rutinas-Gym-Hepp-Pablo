@@ -1,109 +1,89 @@
-# Backend - Administrador de Rutinas - Gym Tormund
+# Backend - Administrador de Rutinas Gym Tormund
 
-API REST construida con FastAPI, SQLModel y PostgreSQL para gestionar rutinas de entrenamiento en un gym.
+API REST con FastAPI + SQLModel + PostgreSQL que gestiona rutinas y autenticación JWT.
 
 ## Requisitos previos
 
-- Python 3.10+
-- PostgreSQL 14+
-- `pip` actualizado
+- Python 3.10 o superior
+- PostgreSQL 14 o superior (con un usuario con permisos para crear bases)
+- PowerShell (Windows) o cualquier terminal equivalente
 
-## Configuración
+## Puesta en marcha rápida
 
-1. Crear entorno virtual y activarlo (en powershell):
-
+1. **Entrar a la carpeta** `backend` y crear el entorno virtual:
+   ```powershell
    cd backend
    python -m venv .venv
    .\.venv\Scripts\activate
-   
-2. Instalar dependencias (en powershell):
-
+   ```
+2. **Instalar dependencias** (notá que el archivo se llama `requeriments.txt`):
+   ```powershell
    pip install --upgrade pip
-   pip install -r requirements.txt
-  
-3. Configurar variables de entorno copiando `.env.example` a `.env` y actualizando credenciales.
+   pip install -r requeriments.txt
+   ```
+3. **Configurar variables**: copiá `.env.example` a `.env`.
 
-4. Crear base de datos en PostgreSQL (`gym_Tormund` por defecto) antes de iniciar la app.
+   ```powershell
+   copy .env.example .env
+   ```
 
-## Migraciones de base de datos
+## Configuración de base de datos
 
-El proyecto usa Alembic. Después de instalar dependencias:
+El backend usa PostgreSQL. Podés configurar la conexión de dos maneras:
 
-```
-alembic upgrade head
-```
+1. **Campos individuales** (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`).
+2. **URL completa** en `DATABASE_URL` (sobrescribe los campos anteriores). Formato recomendado:
+   ```env
+   DATABASE_URL=postgresql+psycopg://usuario:password@localhost:5432/gym_Tormund
+   ```
 
-Esto crea las tablas `rutinas` y `ejercicios` en la base indicada en `.env`.
+> Si no cambiás nada, el sistema intentará conectarse a `postgres://postgres:123456@localhost:5432/gym_Tormund`.
 
-## Ejecución (en powershell)
+### Crear la base de datos
 
-```
+1. Abrí `psql` u otra herramienta y ejecutá:
+   ```sql
+   CREATE DATABASE gym_Tormund;
+   ```
+2. En el mismo entorno donde activaste la venv, corré las migraciones de Alembic para crear las tablas:
+   ```powershell
+   alembic upgrade head
+   ```
+
+Si cambiás el nombre/usuario/contraseña de la base, actualizá los valores en `.env` antes de ejecutar Alembic.
+
+## Ejecutar el backend
+
+Con la venv activa y la configuración correcta:
+
+```powershell
 uvicorn app.main:app --reload --port 8000
 ```
 
 - Health-check: `GET http://localhost:8000/health`
 - Documentación interactiva: `http://localhost:8000/docs`
 
-## Uso de la API de rutinas
+## Endpoints principales
 
 | Método | Ruta | Descripción |
 | --- | --- | --- |
-| `GET` | `/rutinas/` | Lista rutinas. Parámetros opcionales: `search` (nombre parcial) y `dia_semana` (enum `lunes`..`domingo`). |
-| `GET` | `/rutinas/{id}` | Devuelve una rutina con sus ejercicios. |
-| `POST` | `/rutinas/` | Crea una rutina con ejercicios embebidos. |
-| `PUT` | `/rutinas/{id}` | Actualiza nombre/descripcion y reemplaza la lista de ejercicios enviada. |
-| `DELETE` | `/rutinas/{id}` | Elimina la rutina y sus ejercicios asociados. |
+| `POST` | `/auth/register` | Registra un usuario y genera un hash seguro de contraseña. |
+| `POST` | `/auth/login` | Devuelve un JWT para autenticarse desde el frontend. |
+| `GET` | `/auth/me` | Obtiene el usuario autenticado (requiere token). |
+| `GET` | `/rutinas/` | Lista rutinas con filtros `search` y `dia_semana`. |
+| `POST` | `/rutinas/` | Crea una rutina con su lista de ejercicios. |
+| `PUT` | `/rutinas/{id}` | Reemplaza la información de la rutina y sus ejercicios. |
+| `DELETE` | `/rutinas/{id}` | Elimina una rutina y sus ejercicios asociados. |
 
-### Ejemplo de creación
+Para más ejemplos revisá los esquemas en `app/schemas/` o usá la interfaz de Swagger.
 
-```json
-{
-   "nombre": "Inicial",
-   "descripcion": "Rutina para retomar actividad física",
-   "ejercicios": [
-      {
-         "nombre": "Press mancuerna",
-         "dia_semana": "lunes",
-         "series": 3,
-         "repeticiones": 10,
-         "peso": 5,
-         "notas": "Hombros",
-         "orden": 1
-      }
-   ]
-}
-```
+## Estructura clave
 
-Posibles respuestas:
+- `app/core/config.py`: obtención de settings y armado del `DATABASE_URL`.
+- `app/db/session.py`: engine global y dependencias de sesión.
+- `app/api/auth.py`: registro/login y validación de tokens.
+- `app/api/rutinas.py`: CRUD completo de rutinas/ejercicios.
+- `app/models/*`: entidades SQLModel.
+- `alembic/versions/*`: migraciones disponibles.
 
-- `201 Created` con el objeto `RutinaRead` completo.
-- `400 Bad Request` si el nombre ya existe o los datos violan validaciones.
-
-### Ejemplo de actualización parcial
-
-```json
-{
-   "descripcion": "Rutina revisada",
-   "ejercicios": [
-      {
-         "nombre": "Remo con barra",
-         "dia_semana": "martes",
-         "series": 4,
-         "repeticiones": 8,
-         "peso": 35,
-         "orden": 1
-      }
-   ]
-}
-```
-
-Enviar una lista vacía en `ejercicios` borra los ejercicios existentes.
-
-## Estructura del backend
-
-- `app/core/config.py`: configuración usando `pydantic-settings`.
-- `app/db/session.py`: engine y sesiones de SQLModel.
-- `app/main.py`: instancia FastAPI, health-check y registro de routers.
-- `app/api/rutinas.py`: endpoints CRUD de rutinas/ejercicios.
-- `app/models/*`: definiciones SQLModel y relaciones.
-- `app/schemas/*`: esquemas Pydantic para request/response.
+Con estos pasos el backend queda listo para ser consumido por el frontend siguiendo únicamente las instrucciones de este README.

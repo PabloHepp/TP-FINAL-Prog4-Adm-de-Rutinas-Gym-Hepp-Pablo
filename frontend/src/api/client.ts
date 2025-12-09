@@ -4,7 +4,6 @@
 // Facilita la gestión de las solicitudes y respuestas HTTP en la aplicación frontend.
 // Permite una configuración centralizada para manejar aspectos como autenticación, manejo de errores y tiempos de espera.
 
-
 import axios from "axios";
 
 import { AUTH_TOKEN_KEY } from "@/constants/auth";
