@@ -8,6 +8,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Stack,
+  TextField,
 } from "@mui/material";
 
 export interface ConfirmDialogProps {
@@ -19,6 +21,12 @@ export interface ConfirmDialogProps {
   destructive?: boolean;
   onConfirm: () => void;
   onClose: () => void;
+  textFieldLabel?: string;
+  textFieldValue?: string;
+  textFieldPlaceholder?: string;
+  textFieldError?: string;
+  textFieldRequired?: boolean;
+  onTextFieldChange?: (value: string) => void;
 }
 
 function ConfirmDialog({
@@ -30,13 +38,33 @@ function ConfirmDialog({
   destructive = false,
   onConfirm,
   onClose,
+  textFieldLabel,
+  textFieldValue,
+  textFieldPlaceholder,
+  textFieldError,
+  textFieldRequired = false,
+  onTextFieldChange,
 }: ConfirmDialogProps) {
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>{title}</DialogTitle>
-      {description && (
+      {(description || textFieldLabel) && (
         <DialogContent>
-          <DialogContentText>{description}</DialogContentText>
+          <Stack spacing={2}>
+            {description && <DialogContentText>{description}</DialogContentText>}
+            {textFieldLabel && (
+              <TextField
+                label={textFieldLabel}
+                value={textFieldValue ?? ""}
+                placeholder={textFieldPlaceholder}
+                onChange={(event) => onTextFieldChange?.(event.target.value)}
+                error={Boolean(textFieldError)}
+                helperText={textFieldError}
+                required={textFieldRequired}
+                autoFocus
+              />
+            )}
+          </Stack>
         </DialogContent>
       )}
       <DialogActions>

@@ -47,3 +47,7 @@ export interface RutinaUpdatePayload {
   descripcion?: string | null;
   ejercicios?: EjercicioPayload[];
 }
+
+export interface RutinaDuplicatePayload {
+  nuevo_nombre: string;
+}

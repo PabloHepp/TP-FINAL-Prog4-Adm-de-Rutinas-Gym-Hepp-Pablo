@@ -15,6 +15,7 @@ from app.models import DiaSemana, Ejercicio, Rutina
 from app.schemas.rutina import (
     EjercicioCreate,
     RutinaCreate,
+    RutinaDuplicatePayload,
     RutinaRead,
     RutinaUpdate,
 )
@@ -139,6 +140,49 @@ def delete_rutina(rutina_id: int, session: Session = Depends(get_session)) -> No
 
     session.delete(rutina)
     session.commit()
+
+
+@router.post("/{rutina_id}/duplicar", response_model=RutinaRead, status_code=status.HTTP_201_CREATED)
+def duplicate_rutina(
+    rutina_id: int,
+    payload: RutinaDuplicatePayload,
+    session: Session = Depends(get_session),
+) -> Rutina:
+    statement = (
+        select(Rutina)
+        .options(selectinload(_rutina_ejercicios_attr()))
+        .where(Rutina.id == rutina_id)
+    )
+    original = session.exec(statement).first()
+    if not original:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Rutina no encontrada")
+
+    nueva_rutina = Rutina(nombre=payload.nuevo_nombre, descripcion=original.descripcion)
+    nueva_rutina.ejercicios = _build_ejercicios([
+        {
+            "nombre": ejercicio.nombre,
+            "dia_semana": ejercicio.dia_semana,
+            "series": ejercicio.series,
+            "repeticiones": ejercicio.repeticiones,
+            "peso": ejercicio.peso,
+            "notas": ejercicio.notas,
+            "orden": ejercicio.orden,
+        }
+        for ejercicio in original.ejercicios
+    ])
+
+    session.add(nueva_rutina)
+    try:
+        session.commit()
+    except IntegrityError as exc:
+        session.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Ya existe una rutina con ese nombre",
+        ) from exc
+
+    session.refresh(nueva_rutina)
+    return nueva_rutina
 
 
 def _build_ejercicios(items: Sequence[Union[EjercicioCreate, dict[str, Any]]]) -> list[Ejercicio]:

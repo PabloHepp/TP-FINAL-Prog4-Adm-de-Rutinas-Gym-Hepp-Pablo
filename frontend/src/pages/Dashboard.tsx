@@ -8,7 +8,7 @@ import { Alert, Button, CircularProgress, Snackbar, Stack, Typography } from "@m
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { useDeleteRutina, useRutinas } from "@/api/rutinas";
+import { useDeleteRutina, useDuplicateRutina, useRutinas } from "@/api/rutinas";
 import RutinaFilters, { RutinaFiltersValue } from "@/components/RutinaFilters";
 import RutinaTable from "@/components/RutinaTable";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
@@ -27,6 +27,9 @@ function Dashboard() {
     message: "",
     severity: "success",
   });
+  const [rutinaToDuplicate, setRutinaToDuplicate] = useState<Rutina | null>(null);
+  const [duplicateName, setDuplicateName] = useState("");
+  const [duplicateError, setDuplicateError] = useState<string | undefined>();
   const navigate = useNavigate();
   const location = useLocation();
   const { data, isLoading, isError, error, refetch } = useRutinas(
@@ -34,6 +37,7 @@ function Dashboard() {
     filters.dia_semana || undefined
   );
   const { mutateAsync: deleteRutina, isPending: isDeleting } = useDeleteRutina();
+  const { mutateAsync: duplicateRutina, isPending: isDuplicating } = useDuplicateRutina();
 
   useEffect(() => {
     const feedback = (location.state as { feedback?: string } | null)?.feedback;
@@ -55,6 +59,30 @@ function Dashboard() {
         message: err instanceof Error ? err.message : "No se pudo eliminar la rutina.",
         severity: "error",
       });
+    }
+  };
+
+  const handleStartDuplicate = (rutina: Rutina) => {
+    setRutinaToDuplicate(rutina);
+    setDuplicateName(`${rutina.nombre} (copia)`);
+    setDuplicateError(undefined);
+  };
+
+  const handleDuplicate = async () => {
+    if (!rutinaToDuplicate) return;
+    if (!duplicateName.trim()) {
+      setDuplicateError("Ingresá un nombre válido.");
+      return;
+    }
+    try {
+      const nueva = await duplicateRutina({ id: rutinaToDuplicate.id, payload: { nuevo_nombre: duplicateName.trim() } });
+      setRutinaToDuplicate(null);
+      setSnackbar({ open: true, message: "Rutina duplicada correctamente.", severity: "success" });
+      setDuplicateName("");
+      setDuplicateError(undefined);
+      navigate(`/rutinas/${nueva.id}`);
+    } catch (err) {
+      setDuplicateError(err instanceof Error ? err.message : "No se pudo duplicar la rutina.");
     }
   };
 
@@ -97,6 +125,7 @@ function Dashboard() {
           onSelect={(rutina) => navigate(`/rutinas/${rutina.id}`)}
           onEdit={(rutina) => navigate(`/rutinas/${rutina.id}/editar`)}
           onDelete={(rutina) => setRutinaToDelete(rutina)}
+          onDuplicate={handleStartDuplicate}
         />
       )}
 
@@ -122,6 +151,30 @@ function Dashboard() {
           {snackbar.message}
         </Alert>
       </Snackbar>
+
+      <ConfirmDialog
+        open={Boolean(rutinaToDuplicate)}
+        title="Duplicar rutina"
+        description="Ingresá un nuevo nombre para la rutina duplicada."
+        confirmLabel={isDuplicating ? "Duplicando..." : "Duplicar"}
+        onConfirm={handleDuplicate}
+        onClose={() => {
+          if (!isDuplicating) {
+            setRutinaToDuplicate(null);
+            setDuplicateName("");
+            setDuplicateError(undefined);
+          }
+        }}
+        textFieldLabel="Nuevo nombre"
+        textFieldValue={duplicateName}
+        textFieldPlaceholder="Ej. Rutina fuerza (copia)"
+        textFieldRequired
+        textFieldError={duplicateError}
+        onTextFieldChange={(value) => {
+          setDuplicateName(value);
+          if (duplicateError) setDuplicateError(undefined);
+        }}
+      />
     </Stack>
   );
 }

@@ -7,9 +7,10 @@
 
 import { useState } from "react";
 
-import { useDeleteRutina, useRutina } from "@/api/rutinas";
+import { useDeleteRutina, useDuplicateRutina, useRutina } from "@/api/rutinas";
 import { Chip, CircularProgress, Divider, IconButton, Stack, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -22,7 +23,11 @@ function RutinaDetailPage() {
   const rutinaId = Number(id);
   const { data, isLoading, isError, error, refetch } = useRutina(Number.isNaN(rutinaId) ? null : rutinaId);
   const { mutateAsync: deleteRutina, isPending: isDeleting } = useDeleteRutina();
+  const { mutateAsync: duplicateRutina, isPending: isDuplicating } = useDuplicateRutina();
   const [showConfirm, setShowConfirm] = useState(false);
+  const [duplicateDialog, setDuplicateDialog] = useState(false);
+  const [duplicateName, setDuplicateName] = useState("");
+  const [duplicateError, setDuplicateError] = useState<string | undefined>();
 
   const handleDelete = async () => {
     if (!data) return;
@@ -34,6 +39,30 @@ function RutinaDetailPage() {
       });
     } catch {
       /* react-query manejará los errores */
+    }
+  };
+
+  const handleOpenDuplicate = () => {
+    if (!data) return;
+    setDuplicateName(`${data.nombre} (copia)`);
+    setDuplicateError(undefined);
+    setDuplicateDialog(true);
+  };
+
+  const handleDuplicate = async () => {
+    if (!data) return;
+    if (!duplicateName.trim()) {
+      setDuplicateError("Ingresá un nombre válido.");
+      return;
+    }
+    try {
+      const nueva = await duplicateRutina({ id: data.id, payload: { nuevo_nombre: duplicateName.trim() } });
+      setDuplicateDialog(false);
+      navigate(`/rutinas/${nueva.id}`, {
+        state: { feedback: "Rutina duplicada correctamente." },
+      });
+    } catch (err) {
+      setDuplicateError(err instanceof Error ? err.message : "No se pudo duplicar la rutina.");
     }
   };
 
@@ -77,6 +106,9 @@ function RutinaDetailPage() {
         <IconButton color="primary" onClick={() => navigate(`/rutinas/${data.id}/editar`)}>
           <EditIcon />
         </IconButton>
+        <IconButton color="secondary" onClick={handleOpenDuplicate} disabled={isDuplicating}>
+          <ContentCopyIcon />
+        </IconButton>
         <IconButton color="error" onClick={() => setShowConfirm(true)} disabled={isDeleting}>
           <DeleteIcon />
         </IconButton>
@@ -110,6 +142,29 @@ function RutinaDetailPage() {
         onConfirm={handleDelete}
         onClose={() => {
           if (!isDeleting) setShowConfirm(false);
+        }}
+      />
+
+      <ConfirmDialog
+        open={duplicateDialog}
+        title="Duplicar rutina"
+        description="Elegí un nombre nuevo para la copia."
+        confirmLabel={isDuplicating ? "Duplicando..." : "Duplicar"}
+        onConfirm={handleDuplicate}
+        onClose={() => {
+          if (!isDuplicating) {
+            setDuplicateDialog(false);
+            setDuplicateError(undefined);
+          }
+        }}
+        textFieldLabel="Nuevo nombre"
+        textFieldValue={duplicateName}
+        textFieldPlaceholder="Ej. Rutina fuerza (copia)"
+        textFieldRequired
+        textFieldError={duplicateError}
+        onTextFieldChange={(value) => {
+          setDuplicateName(value);
+          if (duplicateError) setDuplicateError(undefined);
         }}
       />
     </Stack>

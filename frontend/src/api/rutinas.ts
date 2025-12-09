@@ -14,6 +14,7 @@ import apiClient from "@/api/client";
 import {
   Rutina,
   RutinaCreatePayload,
+  RutinaDuplicatePayload,
   RutinaUpdatePayload,
 } from "@/types/rutina";
 
@@ -79,6 +80,20 @@ export function useDeleteRutina() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [RUTINAS_KEY] });
+    },
+  });
+}
+
+export function useDuplicateRutina() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, payload }: { id: number; payload: RutinaDuplicatePayload }) => {
+      const { data } = await apiClient.post<Rutina>(`/rutinas/${id}/duplicar`, payload);
+      return data;
+    },
+    onSuccess: (nuevaRutina) => {
+      queryClient.invalidateQueries({ queryKey: [RUTINAS_KEY] });
+      queryClient.invalidateQueries({ queryKey: ["rutina", nuevaRutina.id] });
     },
   });
 }

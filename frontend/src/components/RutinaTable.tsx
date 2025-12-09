@@ -16,6 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -23,10 +24,11 @@ interface RutinaTableProps {
   rutinas: Rutina[];
   onEdit?: (rutina: Rutina) => void;
   onDelete?: (rutina: Rutina) => void;
+  onDuplicate?: (rutina: Rutina) => void;
   onSelect?: (rutina: Rutina) => void;
 }
 
-function RutinaTable({ rutinas, onEdit, onDelete, onSelect }: RutinaTableProps) {
+function RutinaTable({ rutinas, onEdit, onDelete, onDuplicate, onSelect }: RutinaTableProps) {
   if (!rutinas.length) {
     return (
       <Card>
@@ -49,6 +51,9 @@ function RutinaTable({ rutinas, onEdit, onDelete, onSelect }: RutinaTableProps) 
                 <Stack direction="row" spacing={1}>
                   <IconButton aria-label="editar" onClick={() => onEdit?.(rutina)}>
                     <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton aria-label="duplicar" onClick={() => onDuplicate?.(rutina)}>
+                    <ContentCopyIcon fontSize="small" />
                   </IconButton>
                   <IconButton aria-label="eliminar" onClick={() => onDelete?.(rutina)}>
                     <DeleteIcon fontSize="small" />

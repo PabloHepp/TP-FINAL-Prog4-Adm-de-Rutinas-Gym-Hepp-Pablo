@@ -78,3 +78,7 @@ class RutinaUpdate(BaseModel):
 
 class RutinaSearchResponse(BaseModel):
     resultados: List[RutinaRead]
+
+
+class RutinaDuplicatePayload(BaseModel):
+    nuevo_nombre: str = Field(..., max_length=120)
