@@ -1,3 +1,8 @@
+// este archivo define la página para crear una nueva rutina en la aplicación.
+// Utiliza un componente de formulario reutilizable para manejar la entrada de datos.
+// Emplea un hook personalizado para enviar los datos de la nueva rutina a la API.
+// Proporciona navegación para volver a la página anterior o ir a la vista de detalles tras la creación.
+
 import { Alert, IconButton, Stack, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";

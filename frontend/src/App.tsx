@@ -1,3 +1,10 @@
+// este archivo define el componente principal de la aplicación React.
+// Utiliza Material-UI para el diseño y los elementos de la interfaz de usuario.
+// Configura un tema personalizado para la aplicación.
+// Incluye una barra de navegación con un botón de inicio y el título de la aplicación.
+// Utiliza React Router para manejar la navegación entre diferentes páginas.
+// Proporciona un contenedor principal para renderizar las páginas hijas según la ruta actual.
+
 import { AppBar, Box, Container, CssBaseline, IconButton, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link, Outlet } from "react-router-dom";

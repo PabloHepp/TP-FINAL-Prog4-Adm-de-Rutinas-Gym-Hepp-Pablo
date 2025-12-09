@@ -8,7 +8,7 @@
 import { useState } from "react";
 
 import { useDeleteRutina, useDuplicateRutina, useRutina } from "@/api/rutinas";
-import { Chip, CircularProgress, Divider, IconButton, Stack, Typography } from "@mui/material";
+import { Button, Chip, CircularProgress, Divider, IconButton, Stack, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -16,6 +16,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { useNavigate, useParams } from "react-router-dom";
 import ConfirmDialog from "@/components/common/ConfirmDialog";
+import { downloadRutinaCsv, openRutinaPrintView } from "@/utils/exporters";
 
 function RutinaDetailPage() {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ function RutinaDetailPage() {
   const [duplicateDialog, setDuplicateDialog] = useState(false);
   const [duplicateName, setDuplicateName] = useState("");
   const [duplicateError, setDuplicateError] = useState<string | undefined>();
+  const [printAlert, setPrintAlert] = useState<string | null>(null);
 
   const handleDelete = async () => {
     if (!data) return;
@@ -39,6 +41,19 @@ function RutinaDetailPage() {
       });
     } catch {
       /* react-query manejará los errores */
+    }
+  };
+
+  const handleDownloadCsv = () => {
+    if (!data) return;
+    downloadRutinaCsv(data);
+  };
+
+  const handlePrint = () => {
+    if (!data) return;
+    const opened = openRutinaPrintView(data);
+    if (!opened) {
+      setPrintAlert("No se pudo abrir la vista de impresión. Permití ventanas emergentes.");
     }
   };
 
@@ -113,6 +128,19 @@ function RutinaDetailPage() {
           <DeleteIcon />
         </IconButton>
       </Stack>
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+        <Button variant="outlined" onClick={handleDownloadCsv}>
+          Descargar CSV
+        </Button>
+        <Button variant="outlined" onClick={handlePrint}>
+          Imprimir / PDF
+        </Button>
+      </Stack>
+      {printAlert && (
+        <Typography color="error" variant="body2">
+          {printAlert}
+        </Typography>
+      )}
       <Typography color="text.secondary">{data.descripcion || "Sin descripción"}</Typography>
       <Divider />
       <Stack spacing={2}>

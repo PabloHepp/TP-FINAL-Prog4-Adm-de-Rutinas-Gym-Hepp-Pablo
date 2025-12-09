@@ -1,3 +1,9 @@
+// este archivo define el tema personalizado para la aplicación utilizando Material-UI.
+// Configura la paleta de colores primaria y secundaria.
+// Establece los colores de fondo predeterminados para la aplicación.
+// Define la tipografía general utilizada en toda la interfaz de usuario.
+// Permite una apariencia coherente y personalizada en todos los componentes de la aplicación.
+
 import { createTheme } from "@mui/material/styles";
 
 // Tema base: define paleta y tipografía general de la app.
