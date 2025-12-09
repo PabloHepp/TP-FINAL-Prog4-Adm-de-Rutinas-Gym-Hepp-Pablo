@@ -7,6 +7,8 @@
 
 import axios from "axios";
 
+import { AUTH_TOKEN_KEY } from "@/constants/auth";
+
 const baseURL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
 
 const apiClient = axios.create({
@@ -15,5 +17,20 @@ const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+export function setApiClientAuthToken(token: string | null) {
+  if (token) {
+    apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
+    window.localStorage.setItem(AUTH_TOKEN_KEY, token);
+  } else {
+    delete apiClient.defaults.headers.common.Authorization;
+    window.localStorage.removeItem(AUTH_TOKEN_KEY);
+  }
+}
+
+const bootstrapToken = typeof window !== "undefined" ? window.localStorage.getItem(AUTH_TOKEN_KEY) : null;
+if (bootstrapToken) {
+  apiClient.defaults.headers.common.Authorization = `Bearer ${bootstrapToken}`;
+}
 
 export default apiClient;

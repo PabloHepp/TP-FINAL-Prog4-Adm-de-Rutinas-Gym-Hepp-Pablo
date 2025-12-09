@@ -11,6 +11,7 @@ from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlmodel import Session, select
 
+from app.api.deps import get_current_user
 from app.db.session import get_session
 from app.models import DiaSemana, Ejercicio, Rutina
 from app.schemas.rutina import (
@@ -33,7 +34,11 @@ def _rutina_nombre_attr() -> InstrumentedAttribute[Any]:
 def _rutina_fecha_attr() -> InstrumentedAttribute[Any]:
     return cast(InstrumentedAttribute[Any], Rutina.fecha_creacion)
 
-router = APIRouter(prefix="/rutinas", tags=["rutinas"]) 
+router = APIRouter(
+    prefix="/rutinas",
+    tags=["rutinas"],
+    dependencies=[Depends(get_current_user)],
+)
 # Router para las operaciones de rutinas
 # Todas las rutas estarán bajo el prefijo /rutinas
 # Las rutas estarán etiquetadas con "rutinas" para documentación

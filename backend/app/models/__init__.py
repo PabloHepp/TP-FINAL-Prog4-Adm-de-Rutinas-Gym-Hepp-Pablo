@@ -15,5 +15,6 @@
 
 
 from app.models.rutina import DiaSemana, Ejercicio, Rutina
+from app.models.usuario import Usuario
 
-__all__ = ["DiaSemana", "Ejercicio", "Rutina"]
+__all__ = ["DiaSemana", "Ejercicio", "Rutina", "Usuario"]

@@ -8,7 +8,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import rutinas # Importa el router de rutinas luego de configurar las rutas
+from app.api import auth, rutinas # Importa los routers
 
 from app.db.session import init_db
 
@@ -29,7 +29,9 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+
     ],
+    # allow_origin_regex=r"https?://localhost(:\d+)?",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -41,6 +43,7 @@ def on_startup() -> None:
     init_db()
 
 
+app.include_router(auth.router)
 app.include_router(rutinas.router) # Incluye el router de rutinas en la aplicación
 
 

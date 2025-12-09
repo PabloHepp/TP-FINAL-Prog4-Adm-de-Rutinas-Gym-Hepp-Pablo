@@ -20,6 +20,10 @@ class Settings(BaseSettings):
 
     database_url: Annotated[AnyUrl | None, Field(alias="DATABASE_URL")] = None
 
+    secret_key: str = Field(default="insecure-secret", min_length=16)
+    access_token_expire_minutes: int = Field(default=60, ge=1)
+    jwt_algorithm: str = Field(default="HS256")
+
     @property
     def sqlmodel_database_uri(self) -> str:
         if self.database_url:
