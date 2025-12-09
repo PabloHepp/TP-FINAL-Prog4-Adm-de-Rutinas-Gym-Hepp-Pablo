@@ -11,6 +11,8 @@ import { RouterProvider } from "react-router-dom";
 import router from "@/routes/AppRouter";
 import { AuthProvider } from "@/context/AuthContext";
 
+import "@/styles/global.css";
+
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

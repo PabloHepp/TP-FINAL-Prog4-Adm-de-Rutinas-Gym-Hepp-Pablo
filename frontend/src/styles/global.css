@@ -1,0 +1,95 @@
+/* este archivo contiene estilos globales para la aplicación */
+/* utiliza variables CSS para definir colores y estilos reutilizables */
+/* importa la fuente Inter desde Google Fonts */
+/* Reemplaza la fuente con el archivo real en src/assets/fonts */
+/* @font-face {
+  font-family: "Inter";
+  src: url("../assets/fonts/Inter-Regular.woff2") format("woff2");
+  font-display: swap;
+} */
+
+
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+/* Define CSS variables para colores y estilos reutilizables */
+:root {
+  --color-bg: #f4f6fb;
+  --color-surface: #ffffff;
+  --color-text: #1d1f24;
+  --color-muted: #5f6470;
+  --color-accent: #3f72ff;
+  --radius-base: 10px;
+  --transition-base: 0.2s ease;
+}
+
+/* Reset de estilos básicos */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Estilos globales para el cuerpo y elementos tipográficos */
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+p {
+  margin: 0 0 1rem;
+  color: var(--color-muted);
+}
+
+/* Estilos para enlaces */
+button,
+.MuiButton-root {
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: var(--radius-base);
+  text-transform: none;
+  transition: background-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+/* Estilos específicos para botones primarios */
+button,
+.MuiButton-containedPrimary {
+  background-color: var(--color-accent);
+  color: #fff;
+  border: none;
+  padding: 0.65rem 1.5rem;
+  box-shadow: none;
+}
+
+/* Estilos para el estado hover de los botones primarios */
+button:hover,
+.MuiButton-containedPrimary:hover {
+  background-color: #aad3b4;
+}
+
+/* Estilos para tarjetas y contenedores */
+.MuiPaper-root {
+  border-radius: 16px;
+  background-color: var(--color-surface);
+}
+
+/* Estilos para inputs */
+input,
+.MuiInputBase-root {
+  border-radius: var(--radius-base);
+}

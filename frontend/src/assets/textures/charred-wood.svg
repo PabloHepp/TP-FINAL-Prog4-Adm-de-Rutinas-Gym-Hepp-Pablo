@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3d2416" />
+      <stop offset="100%" stop-color="#1f120a" />
+    </linearGradient>
+    <pattern id="rings" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M32 0 C10 0 0 10 0 32" stroke="#6a3d25" stroke-width="4" fill="none" opacity="0.5" />
+      <path d="M32 64 C54 64 64 54 64 32" stroke="#905635" stroke-width="2" fill="none" opacity="0.4" />
+    </pattern>
+  </defs>
+  <rect width="512" height="512" fill="url(#wood)" />
+  <rect width="512" height="512" fill="url(#rings)" />
+</svg>

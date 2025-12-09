@@ -1,0 +1,240 @@
+:root {
+  --ice-light: #eef6fb;
+  --ice-mid: #a0c7dd;
+  --ice-dark: #2b4e62;
+  --stone-gray: #4b5056;
+  --wood-brown: #5d3c27;
+  --rune-copper: #c47b38;
+  --frost-white: #f8fcff;
+  --midnight: #0f1b25;
+  --shadow-ice: 0 12px 32px rgba(15, 27, 37, 0.65);
+  --border-frost: 2px solid rgba(160, 199, 221, 0.55);
+  --glow-blue: 0 0 18px rgba(120, 180, 255, 0.65);
+  --panel-bg: rgba(21, 38, 50, 0.7);
+}
+
+/* Reemplaza la fuente con el archivo real en src/assets/fonts */
+@font-face {
+  font-family: "Norse";
+  src: url("../assets/fonts/Norse-Bold.woff2") format("woff2");
+  font-display: swap;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background: radial-gradient(circle at 20% 10%, rgba(31, 72, 97, 0.8), var(--midnight)),
+    url("../assets/backgrounds/beyond-wall-night.svg") center/cover fixed;
+  color: var(--frost-white);
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("../assets/textures/ice-slab.svg") repeat;
+  mix-blend-mode: screen;
+  opacity: 0.04;
+  animation: northWind 40s linear infinite;
+  pointer-events: none;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(88, 122, 146, 0.2), rgba(15, 27, 37, 0.4));
+  opacity: 0.25;
+  animation: northWind 60s linear infinite;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+
+h1,
+h2,
+.logo-font {
+  font-family: "Norse", "Cinzel", serif;
+  letter-spacing: 0.08em;
+  text-shadow: 0 8px 22px rgba(0, 0, 0, 0.55);
+}
+
+a {
+  color: var(--ice-mid);
+  text-decoration: none;
+  transition: text-shadow 0.2s ease;
+}
+
+a:hover {
+  text-shadow: var(--glow-blue);
+}
+
+.container-frosted {
+  background: var(--panel-bg);
+  border: var(--border-frost);
+  border-radius: 22px;
+  box-shadow: var(--shadow-ice);
+  backdrop-filter: blur(10px);
+}
+
+button {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+}
+
+/* Frozen Button */
+.frozen-btn {
+  position: relative;
+  padding: 0.95rem 2.5rem;
+  color: var(--frost-white);
+  border-radius: 28px 10px 24px 12px;
+  clip-path: polygon(6% 0, 94% 0, 100% 38%, 90% 100%, 10% 100%, 0 62%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  backdrop-filter: blur(3px);
+}
+
+.frozen-btn--glow {
+  box-shadow: var(--glow-blue);
+}
+
+.frozen-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
+
+.frozen-btn--ice {
+  background: linear-gradient(135deg, #73b8d6, #2d5670);
+}
+
+.frozen-btn--frozen {
+  background: rgba(31, 60, 84, 0.85);
+  border: 1px solid rgba(139, 195, 221, 0.75);
+}
+
+.frozen-btn--stone {
+  background: #3e4248;
+  border: 1px solid rgba(139, 154, 161, 0.6);
+}
+
+.frozen-btn--wood {
+  background: #4e2f1f;
+  border: 1px solid rgba(138, 107, 74, 0.65);
+}
+
+.frozen-btn--rune {
+  background: #2a3d46;
+  border: 1px solid rgba(196, 123, 63, 0.7);
+}
+
+/* Wildling Card */
+.wildling-card {
+  border-radius: 18px;
+  padding: 1.6rem;
+  color: var(--frost-white);
+  box-shadow: var(--shadow-ice);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+  position: relative;
+  overflow: hidden;
+}
+
+.wildling-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.06), transparent);
+  pointer-events: none;
+}
+
+.wildling-card::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% 0 -10%;
+  background: linear-gradient(120deg, rgba(143, 201, 231, 0.12), rgba(47, 83, 108, 0.05));
+  opacity: 0.4;
+  animation: northWind 55s linear infinite;
+}
+
+.wildling-card__title {
+  margin-top: 0;
+  font-family: "Norse", "Cinzel", serif;
+  font-size: 1.25rem;
+}
+
+.wildling-card--ice {
+  background: rgba(76, 118, 146, 0.5) url("../assets/textures/ice-slab.svg") center/cover;
+}
+
+.wildling-card--frozen {
+  background: rgba(33, 58, 77, 0.65) url("../assets/textures/frosted-stone.svg") center/cover;
+}
+
+.wildling-card--stone {
+  background: rgba(52, 55, 60, 0.7) url("../assets/textures/frosted-stone.svg") center/cover;
+}
+
+.wildling-card--wood {
+  background: rgba(53, 34, 22, 0.75) url("../assets/textures/charred-wood.svg") center/cover;
+}
+
+.wildling-card--rune {
+  background: rgba(31, 46, 55, 0.75) url("../assets/textures/ice-slab.svg") center/cover;
+  border: 1px solid rgba(196, 123, 63, 0.7);
+}
+
+/* Ice Panel */
+.ice-panel {
+  border-radius: 32px;
+  padding: 2rem;
+  background: rgba(21, 38, 50, 0.65);
+  border: var(--border-frost);
+  box-shadow: var(--shadow-ice);
+  position: relative;
+  overflow: hidden;
+}
+
+.ice-panel--translucent {
+  background: rgba(21, 38, 50, 0.55);
+}
+
+.ice-panel::before {
+  content: "";
+  position: absolute;
+  inset: -30% -10%;
+  background: url("../assets/textures/ice-slab.svg") repeat;
+  opacity: 0.08;
+  animation: northWind 50s linear infinite;
+}
+
+/* Hammer Icon Button */
+.hammer-icon-btn {
+  border-radius: 50%;
+  border: 2px solid transparent;
+  display: grid;
+  place-items: center;
+  color: var(--frost-white);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  background: rgba(61, 108, 140, 0.9);
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.08);
+}
+
+.hammer-icon-btn:hover {
+  box-shadow: 0 0 18px rgba(120, 180, 255, 0.65);
+  transform: translateY(-2px);
+}
+
+.hammer-icon-btn__glyph {
+  font-size: 1.5rem;
+}
+
+@keyframes northWind {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 320px 0;
+  }
+}

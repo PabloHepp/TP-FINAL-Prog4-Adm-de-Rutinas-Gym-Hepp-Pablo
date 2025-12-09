@@ -148,51 +148,51 @@ function LoginPage() {
             </Button>
           </Box>
         </Stack>
-
-        <Collapse in={showRegister} unmountOnExit>
-          <Box component="form" onSubmit={handleRegisterSubmit} mt={4}>
-            <Typography variant="h6" gutterBottom>
-              Crear usuario
-            </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              Registrate completando tus datos. El usuario quedará creado inmediatamente.
-            </Typography>
-
-            {registerError && <Alert severity="error" sx={{ mb: 2 }}>{registerError}</Alert>}
-
-            <Stack spacing={2}>
-              <TextField
-                label="Nombre"
-                value={registerFields.nombre}
-                onChange={(event) => setRegisterFields((prev) => ({ ...prev, nombre: event.target.value }))}
-                required
-                fullWidth
-              />
-              <TextField
-                label="Email"
-                type="email"
-                autoComplete="email"
-                value={registerFields.email}
-                onChange={(event) => setRegisterFields((prev) => ({ ...prev, email: event.target.value }))}
-                required
-                fullWidth
-              />
-              <TextField
-                label="Contraseña"
-                type="password"
-                autoComplete="new-password"
-                value={registerFields.password}
-                onChange={(event) => setRegisterFields((prev) => ({ ...prev, password: event.target.value }))}
-                required
-                fullWidth
-              />
-              <Button type="submit" variant="outlined" disabled={isRegisterSubmitting}>
-                {isRegisterSubmitting ? "Creando..." : "Crear cuenta"}
-              </Button>
-            </Stack>
-          </Box>
-        </Collapse>
       </Paper>
+
+      <Collapse in={showRegister} unmountOnExit>
+        <Box component="form" onSubmit={handleRegisterSubmit} mt={4}>
+          <Typography variant="h6" gutterBottom>
+            Crear usuario
+          </Typography>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            Registrate completando tus datos. El usuario quedará creado inmediatamente.
+          </Typography>
+
+          {registerError && <Alert severity="error" sx={{ mb: 2 }}>{registerError}</Alert>}
+
+          <Stack spacing={2}>
+            <TextField
+              label="Nombre"
+              value={registerFields.nombre}
+              onChange={(event) => setRegisterFields((prev) => ({ ...prev, nombre: event.target.value }))}
+              required
+              fullWidth
+            />
+            <TextField
+              label="Email"
+              type="email"
+              autoComplete="email"
+              value={registerFields.email}
+              onChange={(event) => setRegisterFields((prev) => ({ ...prev, email: event.target.value }))}
+              required
+              fullWidth
+            />
+            <TextField
+              label="Contraseña"
+              type="password"
+              autoComplete="new-password"
+              value={registerFields.password}
+              onChange={(event) => setRegisterFields((prev) => ({ ...prev, password: event.target.value }))}
+              required
+              fullWidth
+            />
+            <Button type="submit" variant="outlined" disabled={isRegisterSubmitting}>
+              {isRegisterSubmitting ? "Creando..." : "Crear cuenta"}
+            </Button>
+          </Stack>
+        </Box>
+      </Collapse>
     </Stack>
   );
 }

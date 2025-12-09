@@ -1,0 +1,1 @@
+Coloca aquí la tipografía rúnica o nórdica que prefieras (por ejemplo, Norse, Cinzel Decorative, Elder Futhark). Actualiza la regla @font-face en src/styles/north-theme.css para apuntar al archivo definitivo.
