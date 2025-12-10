@@ -12,19 +12,12 @@
 /* Import Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
 
-@font-face {
-    font-family: 'GOTfont'; /* nombre de la fuente */
-    src: url('fonts/Got.ttf') format('truetype'); /* Especifica la ruta y el formato */
-    font-weight: normal;
-    font-style: normal;
-}
-
 /* Define CSS variables para colores y estilos reutilizables */
 :root {
-  --color-bg: #c5cde9; 
-  --color-surface: #ffffff; /* Color de fondo para tarjetas y contenedores */
+  --color-bg: #d7dfff; 
+  --color-surface: #298492; /* Color de fondo para tarjetas y contenedores */
   --color-text: #050a18; /* Color principal del texto */
-  --color-muted: #525864; /* Color para texto secundario o deshabilitado */
+  --color-muted: #2e3542; /* Color para texto secundario o deshabilitado */
   --color-accent: #3f72ff; /* Color de acento para botones y enlaces */
   --radius-base: 10px; /* Radio de borde base */
   --transition-base: 0.2s ease; /* Transición base para efectos hover */
@@ -40,7 +33,7 @@
 /* Estilos globales para el cuerpo y elementos tipográficos */
 body {
   margin: 0; /* Elimina el margen por defecto */
-  font-family: "GOTfont", sans-serif; /* Fuente principal */
+  font-family: "Inter", sans-serif; /* Fuente principal */
   background-color: var(--color-bg); /* Color de fondo */
   color: var(--color-text); /* Color del texto */
   line-height: 1.6; /* Altura de línea para mejorar la legibilidad */
@@ -86,7 +79,7 @@ button,
 /* Estilos para el estado hover de los botones primarios */
 button:hover,
 .MuiButton-containedPrimary:hover {
-  background-color: #9abea3;
+  background-color: #8ae4ff;
 }
 
 /* Estilos para tarjetas y contenedores */

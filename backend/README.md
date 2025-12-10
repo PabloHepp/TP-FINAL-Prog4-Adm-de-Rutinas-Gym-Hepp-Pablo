@@ -39,6 +39,27 @@ El backend usa PostgreSQL. Podés configurar la conexión de dos maneras:
 
 > Si no cambiás nada, el sistema intentará conectarse a `postgres://postgres:123456@localhost:5432/gym_Tormund`.
 
+### Ejemplo de `.env`
+
+```env
+# Campos individuales
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=gym_Tormund
+DB_USER=postgres
+DB_PASSWORD=123456
+
+# Alternativa completa (sobrescribe los campos anteriores)
+DATABASE_URL=postgresql+psycopg://postgres:123456@localhost:5432/gym_Tormund
+
+# JWT y ajustes adicionales
+SECRET_KEY=changeme
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+```
+
+Asegurate de que al menos una de las dos modalidades (campos individuales o `DATABASE_URL`) tenga valores válidos.
+
 ### Crear la base de datos
 
 1. Abrí `psql` u otra herramienta y ejecutá:
