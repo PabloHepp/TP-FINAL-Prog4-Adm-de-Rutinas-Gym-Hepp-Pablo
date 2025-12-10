@@ -1,7 +1,7 @@
 from functools import lru_cache
 from typing import Annotated
 
-from pydantic import AnyUrl, Field
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     db_user: str = Field(default="postgres")
     db_password: str = Field(default="123456")
 
-    database_url: Annotated[AnyUrl | None, Field(alias="DATABASE_URL")] = None
+    database_url: Annotated[str | None, Field(alias="DATABASE_URL")] = None
 
     secret_key: str = Field(default="insecure-secret", min_length=16)
     access_token_expire_minutes: int = Field(default=60, ge=1)
