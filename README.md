@@ -1,4 +1,4 @@
-Sistema de Gestión de Rutinas de Gimnasio
+## Sistema de Gestión de Rutinas de Gimnasio
 
 Proyecto full-stack para Programación 4 (UTN) que permite administrar rutinas de entrenamiento con un backend FastAPI + PostgreSQL y un frontend React + Vite.
 
