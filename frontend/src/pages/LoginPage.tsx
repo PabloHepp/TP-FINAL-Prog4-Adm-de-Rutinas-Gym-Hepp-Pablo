@@ -15,6 +15,7 @@ import {
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/context/AuthContext";
+import { NorthAxe } from "@/components/north";
 
 const MIN_PASSWORD_LENGTH = 4;
 const MAX_PASSWORD_LENGTH = 20;
@@ -105,9 +106,50 @@ function LoginPage() {
   };
 
   return (
-    <Stack minHeight="100vh" alignItems="center" justifyContent="center" sx={{ backgroundColor: "#f5f5f5", py: 4 }}>
-      <Paper elevation={3} sx={{ width: "100%", maxWidth: 420, p: 4 }}>
-        <Stack spacing={3} component="form" onSubmit={handleLoginSubmit}>
+    <Box
+      component="section"
+      sx={{
+        minHeight: "100vh",
+        background: "linear-gradient(180deg, #f5f5f5 0%, #e2e8f0 100%)",
+        py: { xs: 4, md: 6 },
+        px: { xs: 2, md: 4 },
+      }}
+    >
+      <Stack spacing={4} alignItems="center">
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 1100,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: { xs: 2, md: 3, lg: 6 },
+          }}
+        >
+          <Box sx={{ display: { xs: "none", md: "flex" }, flex: "0 0 auto" }}>
+            <NorthAxe side="left" />
+          </Box>
+
+          <Paper
+            elevation={6}
+            sx={{
+              width: "100%",
+              maxWidth: 420,
+              p: { xs: 3, md: 4 },
+              borderRadius: 4,
+              position: "relative",
+              overflow: "hidden",
+              "&::before": {
+                content: "''",
+                position: "absolute",
+                inset: 0,
+                background: "linear-gradient(135deg, rgba(255,255,255,0.2), rgba(63,114,255,0.08))",
+                opacity: 0.85,
+                pointerEvents: "none",
+              },
+            }}
+          >
+            <Stack spacing={3} component="form" onSubmit={handleLoginSubmit} sx={{ position: "relative", zIndex: 1 }}>
           <div>
             <Typography variant="h5" component="h1" gutterBottom>
               Iniciar sesión
@@ -147,53 +189,68 @@ function LoginPage() {
               {showRegister ? "Ya tengo una cuenta" : "Crear un nuevo usuario"}
             </Button>
           </Box>
-        </Stack>
-      </Paper>
+            </Stack>
+          </Paper>
 
-      <Collapse in={showRegister} unmountOnExit>
-        <Box component="form" onSubmit={handleRegisterSubmit} mt={4}>
-          <Typography variant="h6" gutterBottom>
-            Crear usuario
-          </Typography>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            Registrate completando tus datos. El usuario quedará creado inmediatamente.
-          </Typography>
-
-          {registerError && <Alert severity="error" sx={{ mb: 2 }}>{registerError}</Alert>}
-
-          <Stack spacing={2}>
-            <TextField
-              label="Nombre"
-              value={registerFields.nombre}
-              onChange={(event) => setRegisterFields((prev) => ({ ...prev, nombre: event.target.value }))}
-              required
-              fullWidth
-            />
-            <TextField
-              label="Email"
-              type="email"
-              autoComplete="email"
-              value={registerFields.email}
-              onChange={(event) => setRegisterFields((prev) => ({ ...prev, email: event.target.value }))}
-              required
-              fullWidth
-            />
-            <TextField
-              label="Contraseña"
-              type="password"
-              autoComplete="new-password"
-              value={registerFields.password}
-              onChange={(event) => setRegisterFields((prev) => ({ ...prev, password: event.target.value }))}
-              required
-              fullWidth
-            />
-            <Button type="submit" variant="outlined" disabled={isRegisterSubmitting}>
-              {isRegisterSubmitting ? "Creando..." : "Crear cuenta"}
-            </Button>
-          </Stack>
+          <Box sx={{ display: { xs: "none", md: "flex" }, flex: "0 0 auto" }}>
+            <NorthAxe side="right" />
+          </Box>
         </Box>
-      </Collapse>
-    </Stack>
+
+        <Collapse in={showRegister} unmountOnExit>
+          <Paper
+            component="form"
+            onSubmit={handleRegisterSubmit}
+            elevation={3}
+            sx={{
+              width: "100%",
+              maxWidth: 560,
+              p: { xs: 3, md: 4 },
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Crear usuario
+            </Typography>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
+              Registrate completando tus datos. El usuario quedará creado inmediatamente.
+            </Typography>
+
+            {registerError && <Alert severity="error" sx={{ mb: 2 }}>{registerError}</Alert>}
+
+            <Stack spacing={2}>
+              <TextField
+                label="Nombre"
+                value={registerFields.nombre}
+                onChange={(event) => setRegisterFields((prev) => ({ ...prev, nombre: event.target.value }))}
+                required
+                fullWidth
+              />
+              <TextField
+                label="Email"
+                type="email"
+                autoComplete="email"
+                value={registerFields.email}
+                onChange={(event) => setRegisterFields((prev) => ({ ...prev, email: event.target.value }))}
+                required
+                fullWidth
+              />
+              <TextField
+                label="Contraseña"
+                type="password"
+                autoComplete="new-password"
+                value={registerFields.password}
+                onChange={(event) => setRegisterFields((prev) => ({ ...prev, password: event.target.value }))}
+                required
+                fullWidth
+              />
+              <Button type="submit" variant="outlined" disabled={isRegisterSubmitting}>
+                {isRegisterSubmitting ? "Creando..." : "Crear cuenta"}
+              </Button>
+            </Stack>
+          </Paper>
+        </Collapse>
+      </Stack>
+    </Box>
   );
 }
 

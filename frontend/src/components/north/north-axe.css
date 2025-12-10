@@ -1,0 +1,218 @@
+.north-axe {
+  --axe-metal: linear-gradient(140deg, #d7dcef 0%, #a8b1c3 40%, #fdfdfd 100%);
+  --axe-metal-dark: #7b8698;
+  --axe-edge: linear-gradient(90deg, #ffffff, #dfe5f2, #ffffff);
+  --axe-handle: linear-gradient(180deg, #6a3d1a 0%, #3b2210 100%);
+  --axe-leather: linear-gradient(180deg, rgba(56, 31, 14, 0.95), rgba(99, 53, 21, 0.95));
+  --axe-shadow: drop-shadow(0 18px 24px rgba(11, 17, 23, 0.55));
+  --axe-highlight: rgba(255, 255, 255, 0.45);
+
+  width: clamp(160px, 20vw, 240px);
+  height: clamp(260px, 32vw, 420px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.north-axe__mirror,
+.north-axe__swing,
+.north-axe__body {
+  width: 100%;
+  height: 100%;
+}
+
+.north-axe__mirror {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.north-axe--right .north-axe__mirror {
+  transform: scaleX(-1);
+}
+
+.north-axe__swing {
+  position: relative;
+  animation: northAxeSwing 5.8s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+
+.north-axe--right .north-axe__swing {
+  animation-delay: -1.1s;
+}
+
+.north-axe__body {
+  position: relative;
+  transform-origin: 50% 80%;
+  animation: northAxeTilt 5.8s ease-in-out infinite;
+  filter: var(--axe-shadow);
+}
+
+.north-axe__head {
+  position: absolute;
+  top: 6%;
+  width: 78%;
+  height: 30%;
+  left: 11%;
+}
+
+.north-axe__head--right {
+  transform: rotate(8deg);
+}
+
+.north-axe__head--left {
+  transform: scaleX(-1) rotate(8deg);
+}
+
+.north-axe__blade {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 140px 40px 40px 140px;
+  background: var(--axe-metal);
+  box-shadow: inset -12px -6px 14px rgba(0, 0, 0, 0.25), inset 0 10px 18px rgba(255, 255, 255, 0.3);
+}
+
+.north-axe__blade::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border-radius: 120px 30px 30px 120px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.12));
+}
+
+.north-axe__edge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 100%;
+  background: var(--axe-edge);
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.5);
+}
+
+.north-axe__notch {
+  position: absolute;
+  width: 46px;
+  height: 8px;
+  top: 28%;
+  left: 24%;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  transform: rotate(-12deg);
+  box-shadow: inset 0 -2px 2px rgba(255, 255, 255, 0.15);
+}
+
+.north-axe__handle {
+  position: absolute;
+  top: 28%;
+  left: 45%;
+  width: 10%;
+  height: 62%;
+  background: var(--axe-handle);
+  border-radius: 18px;
+  box-shadow: inset 0 -14px 18px rgba(0, 0, 0, 0.45);
+}
+
+.north-axe__leather {
+  position: absolute;
+  left: 41%;
+  top: 42%;
+  width: 18%;
+  height: 26%;
+  border-radius: 8px;
+  background: var(--axe-leather);
+  box-shadow: inset 0 -6px 8px rgba(0, 0, 0, 0.4);
+  opacity: 0.95;
+}
+
+.north-axe__leather::before {
+  content: "";
+  position: absolute;
+  inset: 8% 10%;
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0,
+    rgba(0, 0, 0, 0.3) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  opacity: 0.65;
+}
+
+.north-axe__pommel {
+  position: absolute;
+  width: 18%;
+  height: 8%;
+  bottom: 4%;
+  left: 41%;
+  border-radius: 10px;
+  background: linear-gradient(120deg, #553014, #2b1408);
+  box-shadow: inset 0 -6px 8px rgba(0, 0, 0, 0.5);
+}
+
+.north-axe__spark {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  top: 0;
+  right: 10%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.55), transparent 60%);
+  filter: blur(1px);
+  opacity: 0.65;
+  animation: northAxePulse 3.6s ease-in-out infinite;
+}
+
+.north-axe--right .north-axe__spark {
+  animation-delay: -1.3s;
+}
+
+@keyframes northAxeSwing {
+  0% {
+    transform: translateX(-12px);
+  }
+  50% {
+    transform: translateX(12px);
+  }
+  100% {
+    transform: translateX(-12px);
+  }
+}
+
+@keyframes northAxeTilt {
+  0% {
+    transform: rotate(-12deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(-12deg);
+  }
+}
+
+@keyframes northAxePulse {
+  0% {
+    opacity: 0.2;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.2;
+    transform: scale(0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .north-axe__swing,
+  .north-axe__body,
+  .north-axe__spark {
+    animation: none;
+  }
+}
