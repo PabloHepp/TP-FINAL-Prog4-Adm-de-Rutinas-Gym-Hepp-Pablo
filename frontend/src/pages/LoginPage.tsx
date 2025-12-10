@@ -1,3 +1,8 @@
+//este archivo define la página de inicio de sesión para la aplicación.
+//Proporciona formularios para que los usuarios inicien sesión o se registren.
+//Maneja la validación de entradas y muestra mensajes de error apropiados.
+//Utiliza el contexto de autenticación para gestionar el estado del usuario.
+
 import { useState } from "react";
 
 import axios from "axios";
@@ -110,7 +115,7 @@ function LoginPage() {
       component="section"
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(180deg, #f5f5f5 0%, #e2e8f0 100%)",
+        background: "radial-gradient(circle at 20% 20%, #13233a 0%, #0b1421 70%)",
         py: { xs: 4, md: 6 },
         px: { xs: 2, md: 4 },
       }}
@@ -136,25 +141,33 @@ function LoginPage() {
               width: "100%",
               maxWidth: 420,
               p: { xs: 3, md: 4 },
-              borderRadius: 4,
+              borderRadius: 3,
               position: "relative",
               overflow: "hidden",
+              background: "linear-gradient(155deg, rgba(8, 15, 28, 0.96), rgba(20, 34, 54, 0.92))",
+              border: "1px solid rgba(146, 173, 196, 0.35)",
+              color: "#f4f7fb",
               "&::before": {
                 content: "''",
                 position: "absolute",
                 inset: 0,
-                background: "linear-gradient(135deg, rgba(255,255,255,0.2), rgba(63,114,255,0.08))",
-                opacity: 0.85,
+                background: "linear-gradient(145deg, rgba(255,255,255,0.12), transparent)",
+                opacity: 0.6,
                 pointerEvents: "none",
               },
             }}
           >
             <Stack spacing={3} component="form" onSubmit={handleLoginSubmit} sx={{ position: "relative", zIndex: 1 }}>
           <div>
-            <Typography variant="h5" component="h1" gutterBottom>
+            <Typography
+              variant="h5"
+              component="h1"
+              gutterBottom
+              sx={{ color: "#f7f9ff", fontWeight: 700, letterSpacing: "0.08em" }}
+            >
               Iniciar sesión
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" sx={{ color: "rgba(240, 247, 255, 0.75)" }}>
               Accedé a tu administrador de rutinas.
             </Typography>
           </div>
@@ -169,6 +182,18 @@ function LoginPage() {
             onChange={(event) => setLoginFields((prev) => ({ ...prev, email: event.target.value }))}
             required
             fullWidth
+            InputProps={{
+              sx: {
+                color: "#f7f9ff",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "rgba(255,255,255,0.25)",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#9cc4ff",
+                },
+              },
+            }}
+            InputLabelProps={{ sx: { color: "rgba(247,249,255,0.7)" } }}
           />
           <TextField
             label="Contraseña"
@@ -178,6 +203,18 @@ function LoginPage() {
             onChange={(event) => setLoginFields((prev) => ({ ...prev, password: event.target.value }))}
             required
             fullWidth
+            InputProps={{
+              sx: {
+                color: "#f7f9ff",
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "rgba(255,255,255,0.25)",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#9cc4ff",
+                },
+              },
+            }}
+            InputLabelProps={{ sx: { color: "rgba(247,249,255,0.7)" } }}
           />
 
           <Button type="submit" variant="contained" disabled={isLoginSubmitting}>
@@ -185,7 +222,11 @@ function LoginPage() {
           </Button>
 
           <Box>
-            <Button variant="text" onClick={() => setShowRegister((prev) => !prev)}>
+            <Button
+              variant="text"
+              onClick={() => setShowRegister((prev) => !prev)}
+              sx={{ color: "#9cc4ff", fontWeight: 600 }}
+            >
               {showRegister ? "Ya tengo una cuenta" : "Crear un nuevo usuario"}
             </Button>
           </Box>
@@ -201,17 +242,20 @@ function LoginPage() {
           <Paper
             component="form"
             onSubmit={handleRegisterSubmit}
-            elevation={3}
+            elevation={6}
             sx={{
               width: "100%",
               maxWidth: 560,
               p: { xs: 3, md: 4 },
+              background: "linear-gradient(155deg, rgba(9, 16, 28, 0.96), rgba(19, 31, 49, 0.9))",
+              border: "1px solid rgba(146, 173, 196, 0.35)",
+              color: "#f5f8ff",
             }}
           >
             <Typography variant="h6" gutterBottom>
               Crear usuario
             </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography variant="body2" sx={{ color: "rgba(240, 247, 255, 0.75)" }} gutterBottom>
               Registrate completando tus datos. El usuario quedará creado inmediatamente.
             </Typography>
 
@@ -224,6 +268,18 @@ function LoginPage() {
                 onChange={(event) => setRegisterFields((prev) => ({ ...prev, nombre: event.target.value }))}
                 required
                 fullWidth
+                InputProps={{
+                  sx: {
+                    color: "#f7f9ff",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255,255,255,0.25)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#9cc4ff",
+                    },
+                  },
+                }}
+                InputLabelProps={{ sx: { color: "rgba(247,249,255,0.7)" } }}
               />
               <TextField
                 label="Email"
@@ -233,6 +289,18 @@ function LoginPage() {
                 onChange={(event) => setRegisterFields((prev) => ({ ...prev, email: event.target.value }))}
                 required
                 fullWidth
+                InputProps={{
+                  sx: {
+                    color: "#f7f9ff",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255,255,255,0.25)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#9cc4ff",
+                    },
+                  },
+                }}
+                InputLabelProps={{ sx: { color: "rgba(247,249,255,0.7)" } }}
               />
               <TextField
                 label="Contraseña"
@@ -242,6 +310,18 @@ function LoginPage() {
                 onChange={(event) => setRegisterFields((prev) => ({ ...prev, password: event.target.value }))}
                 required
                 fullWidth
+                InputProps={{
+                  sx: {
+                    color: "#f7f9ff",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "rgba(255,255,255,0.25)",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#9cc4ff",
+                    },
+                  },
+                }}
+                InputLabelProps={{ sx: { color: "rgba(247,249,255,0.7)" } }}
               />
               <Button type="submit" variant="outlined" disabled={isRegisterSubmitting}>
                 {isRegisterSubmitting ? "Creando..." : "Crear cuenta"}

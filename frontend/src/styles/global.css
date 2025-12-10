@@ -10,17 +10,19 @@
 
 
 /* Import Google Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&display=swap");
 
 /* Define CSS variables para colores y estilos reutilizables */
 :root {
-  --color-bg: #d7dfff; 
-  --color-surface: #298492; /* Color de fondo para tarjetas y contenedores */
-  --color-text: #050a18; /* Color principal del texto */
-  --color-muted: #2e3542; /* Color para texto secundario o deshabilitado */
-  --color-accent: #3f72ff; /* Color de acento para botones y enlaces */
-  --radius-base: 10px; /* Radio de borde base */
-  --transition-base: 0.2s ease; /* Transición base para efectos hover */
+  --color-bg: #0b1421;
+  --color-bg-soft: #142337;
+  --color-surface: rgba(23, 36, 55, 0.9);
+  --color-border: rgba(146, 173, 196, 0.35);
+  --color-text: #f3f6fb;
+  --color-muted: #a8b7c7;
+  --color-accent: #6da9ff;
+  --radius-base: 6px;
+  --transition-base: 0.2s ease;
 }
 
 /* Reset de estilos básicos */
@@ -33,8 +35,8 @@
 /* Estilos globales para el cuerpo y elementos tipográficos */
 body {
   margin: 0; /* Elimina el margen por defecto */
-  font-family: "Inter", sans-serif; /* Fuente principal */
-  background-color: var(--color-bg); /* Color de fondo */
+  font-family: "Cinzel", serif; /* Fuente principal */
+  background: radial-gradient(circle at 20% 20%, #1a2a3f, #0b1421 60%);
   color: var(--color-text); /* Color del texto */
   line-height: 1.6; /* Altura de línea para mejorar la legibilidad */
   min-height: 100vh; /* Asegura que el cuerpo ocupe al menos el alto de la ventana */
@@ -60,9 +62,10 @@ p {
 button,
 .MuiButton-root {
   font-family: inherit;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: var(--radius-base);
-  text-transform: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   transition: background-color var(--transition-base), box-shadow var(--transition-base);
 }
 
@@ -70,22 +73,24 @@ button,
 button,
 .MuiButton-containedPrimary {
   background-color: var(--color-accent);
-  color: #fff;
-  border: none;
-  padding: 0.65rem 1.5rem;
-  box-shadow: none;
+  color: #061120;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.55rem 1.4rem;
+  box-shadow: 0 12px 22px rgba(5, 15, 32, 0.35);
 }
 
 /* Estilos para el estado hover de los botones primarios */
 button:hover,
 .MuiButton-containedPrimary:hover {
-  background-color: #8ae4ff;
+  background-color: #9fc5ff;
 }
 
 /* Estilos para tarjetas y contenedores */
 .MuiPaper-root {
-  border-radius: 16px;
+  border-radius: 12px;
   background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 18px 30px rgba(5, 10, 18, 0.6);
 }
 
 /* Estilos para inputs */

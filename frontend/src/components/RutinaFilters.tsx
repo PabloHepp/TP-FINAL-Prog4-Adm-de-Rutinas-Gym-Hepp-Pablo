@@ -39,7 +39,18 @@ function RutinaFilters({ value, onChange }: RutinaFiltersProps) {
   };
 
   return (
-    <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center">
+    <Stack
+      direction={{ xs: "column", sm: "row" }}
+      spacing={2}
+      alignItems="stretch"
+      sx={{
+        background: "rgba(15, 24, 38, 0.8)",
+        border: "1px solid rgba(146, 173, 196, 0.35)",
+        borderRadius: 3,
+        boxShadow: "0 18px 32px rgba(3, 8, 15, 0.65)",
+        p: { xs: 2, sm: 3 },
+      }}
+    >
       <TextField
         label="Buscar rutina"
         placeholder="Nombre"

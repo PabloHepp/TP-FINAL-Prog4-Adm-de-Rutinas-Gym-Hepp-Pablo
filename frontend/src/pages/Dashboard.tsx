@@ -19,7 +19,7 @@ const INITIAL_FILTERS: RutinaFiltersValue = {
   dia_semana: "",
 };
 
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 3;
 
 function Dashboard() {
   const [filters, setFilters] = useState<RutinaFiltersValue>(INITIAL_FILTERS);
@@ -130,7 +130,7 @@ function Dashboard() {
   };
 
   return (
-    <Stack spacing={3}>
+    <Stack spacing={3} sx={{ py: { xs: 2, md: 3 } }}>
       <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" alignItems="center" spacing={2}>
         <div>
           <Typography variant="h4" component="h1">

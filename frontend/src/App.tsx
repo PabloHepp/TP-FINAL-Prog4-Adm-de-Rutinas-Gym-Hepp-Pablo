@@ -19,18 +19,43 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        <AppBar position="static" color="primary" elevation={0}>
-          <Toolbar sx={{ position: "relative", justifyContent: "center" }}>
+        <AppBar
+          position="static"
+          elevation={0}
+          sx={{
+            background: "linear-gradient(135deg, #e2e8f5 0%, #c9d3e4 65%)",
+            color: "#0a1424",
+            borderBottom: "1px solid rgba(6, 17, 32, 0.25)",
+            boxShadow: "0 8px 18px rgba(6, 11, 21, 0.25)",
+          }}
+        >
+          <Toolbar sx={{ position: "relative", justifyContent: "center", minHeight: { xs: 70, md: 88 } }}>
             <IconButton
               color="inherit"
               component={Link}
               to="/"
               aria-label="Ir al inicio"
-              sx={{ position: "absolute", left: (theme) => theme.spacing(1) }}
+              sx={{
+                position: "absolute",
+                left: (theme) => theme.spacing(1.5),
+                color: "#0a1424",
+                "&:hover": { color: "#233750" },
+              }}
             >
               <HomeIcon />
             </IconButton>
-            <Typography variant="h6" component="div" textAlign="center">
+            <Typography
+              variant="h5"
+              component="div"
+              textAlign="center"
+              sx={{
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                fontSize: { xs: "1.1rem", sm: "1.3rem", md: "1.45rem" },
+                textTransform: "uppercase",
+                color: "#0a1424",
+              }}
+            >
               Administrador de Rutinas Gym Tormund
             </Typography>
             {user && (
@@ -43,10 +68,22 @@ function App() {
                   gap: 1,
                 }}
               >
-                <Typography variant="body2" sx={{ display: { xs: "none", sm: "block" } }}>
+                <Typography
+                  variant="body2"
+                  sx={{ display: { xs: "none", sm: "block" }, color: "#1f2d44", fontWeight: 600 }}
+                >
                   {user.nombre}
                 </Typography>
-                <Button variant="outlined" color="inherit" size="small" onClick={logout}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={logout}
+                  sx={{
+                    color: "#0a1424",
+                    borderColor: "rgba(6, 17, 32, 0.45)",
+                    "&:hover": { borderColor: "rgba(6, 17, 32, 0.65)" },
+                  }}
+                >
                   Cerrar sesión
                 </Button>
               </Box>

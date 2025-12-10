@@ -12,45 +12,78 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({ // Tema personalizado para la aplicación
   palette: {
     primary: {
-      main: "#3f72ff",
-      light: "#6f92ff",
-      dark: "#3159cc",
-      contrastText: "#ffffff",
+      main: "#6da9ff",
+      light: "#9cc4ff",
+      dark: "#1c3f63",
+      contrastText: "#061120",
     },
     secondary: {
-      main: "#1d1f24",
-      contrastText: "#ffffff",
+      main: "#1f2e43",
+      contrastText: "#f4f7fb",
     },
     text: {
-      primary: "#1d1f24",
-      secondary: "#5f6470",
+      primary: "#f4f7fb",
+      secondary: "#a9b6c7",
     },
     background: {
-      default: "#f4f6fb",
-      paper: "#ffffff",
+      default: "#0b1421",
+      paper: "rgba(23, 36, 55, 0.95)",
     },
   },
   typography: {
-    fontFamily: "'Inter', sans-serif",
-    h5: { fontWeight: 600 },
-    body1: { color: "#5f6470" },
+    fontFamily: "'Cinzel', serif",
+    h4: { letterSpacing: "0.08em", textTransform: "uppercase" },
+    h5: { fontWeight: 600, letterSpacing: "0.08em" },
+    button: { letterSpacing: "0.08em" },
   },
   shape: {
-    borderRadius: 10,
+    borderRadius: 8,
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundColor: "#0b1421",
+          color: "#f4f7fb",
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: "none",
-          fontWeight: 600,
+          textTransform: "uppercase",
+          fontWeight: 500,
+          borderRadius: 6,
+          border: "1px solid rgba(255,255,255,0.15)",
+          boxShadow: "0 10px 22px rgba(4, 11, 22, 0.45)",
         },
       },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: 16,
+          borderRadius: 12,
+          border: "1px solid rgba(146, 173, 196, 0.35)",
+          backgroundImage: "linear-gradient(145deg, rgba(11, 20, 33, 0.95), rgba(23, 36, 55, 0.85))",
+          boxShadow: "0 22px 45px rgba(4, 10, 18, 0.65)",
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          border: "1px solid rgba(146, 173, 196, 0.35)",
+          backgroundImage: "linear-gradient(165deg, rgba(18, 30, 45, 0.95), rgba(10, 18, 28, 0.85))",
+          boxShadow: "0 18px 36px rgba(1, 5, 12, 0.75)",
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        outlined: {
+          borderColor: "rgba(157, 186, 210, 0.5)",
+          color: "#d5e2f3",
+          backgroundColor: "rgba(157, 186, 210, 0.08)",
         },
       },
     },
